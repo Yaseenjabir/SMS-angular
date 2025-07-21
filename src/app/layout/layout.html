@@ -1,0 +1,28 @@
+<div class="flex min-h-screen">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 text-white p-4">
+    <h2 class="text-xl font-bold mb-6">My Dashboard</h2>
+    <nav class="flex flex-col gap-4">
+      <a routerLink="/" routerLinkActive="font-semibold" class="hover:underline"
+        >Dashboardddddddddddd</a
+      >
+      <a
+        routerLink="/students"
+        routerLinkActive="font-semibold"
+        class="hover:underline"
+        >Students</a
+      >
+      <a
+        routerLink="/classes"
+        routerLinkActive="font-semibold"
+        class="hover:underline"
+        >Classes</a
+      >
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 bg-gray-100 p-6">
+    <router-outlet></router-outlet>
+  </main>
+</div>

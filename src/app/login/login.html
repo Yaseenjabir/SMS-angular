@@ -1,0 +1,15 @@
+<div *ngIf="!authService.loggedIn">
+  <!-- Show login only when ready -->
+  <div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="bg-white p-6 rounded shadow w-full max-w-sm">
+      <h2 class="text-xl font-bold mb-4 text-center">Login</h2>
+
+      <button
+        (click)="handleLogin()"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
+      >
+        Login
+      </button>
+    </div>
+  </div>
+</div>
