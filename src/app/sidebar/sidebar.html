@@ -1,1 +1,49 @@
-<div class="text-red-500">hello world</div>
+<div
+  [ngClass]="[
+    'bg-primary',
+    'text-primary-foreground',
+    'transition-all',
+    'duration-300',
+    'flex',
+    'flex-col',
+    'fixed',
+    'md:static',
+    'inset-y-0',
+    'left-0',
+    'z-50',
+    'min-h-screen',
+    isCollapsed
+      ? 'w-16 -translate-x-full md:translate-x-0'
+      : 'w-64 translate-x-0'
+  ]"
+>
+  <!-- Logo and Toggle -->
+  <div class="p-4 border-b border-primary-light">
+    <div class="flex items-center justify-between">
+      <h1 *ngIf="!isCollapsed" class="text-xl font-bold">SchoolMS</h1>
+      <button
+        (click)="toggleSidebar()"
+        class="p-2 rounded-lg hover:bg-primary-light transition-colors bg-blue-500 cursor-pointer"
+      >
+        {{ isCollapsed ? "→" : "←" }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="flex-1 py-4">
+    <ul class="space-y-2 px-3">
+      <li *ngFor="let item of menuItems">
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-primary-foreground text-primary font-medium"
+          [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+          class="flex items-center px-3 py-2 rounded-lg transition-colors hover:bg-primary-light"
+        >
+          <span class="text-xl mr-3">{{ item.icon }}</span>
+          <span *ngIf="!isCollapsed" class="font-medium">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

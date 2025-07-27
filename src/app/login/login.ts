@@ -19,7 +19,7 @@ export class Login {
   }
 
   handleLogin() {
-    this.authService.login();
+    this.authService.login('yaseen');
     this.router.navigate(['/']);
   }
 }

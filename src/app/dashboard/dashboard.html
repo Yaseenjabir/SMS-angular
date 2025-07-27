@@ -1,1 +1,99 @@
-<p>dashboard works!</p>
+<div class="space-y-6">
+  <!-- Header  -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-foreground">Dashboard</h1>
+    <div class="text-sm text-muted-foreground">Last updated: {{ today }}</div>
+  </div>
+
+  <!-- Stats Card  -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div
+      *ngFor="let card of statsCards"
+      class="hover:shadow-lg transition-shadow rounded-lg border bg-white p-4 flex flex-col gap-2"
+    >
+      <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div class="text-sm font-medium text-muted-foreground">
+          {{ card.title }}
+        </div>
+        <div class="p-2 rounded-full text-white text-xl" [ngClass]="card.color">
+          {{ card.icon }}
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-foreground">{{ card.value }}</div>
+      <p class="text-xs text-muted-foreground">{{ card.subtitle }}</p>
+    </div>
+  </div>
+
+  <!-- Recent Announcements and Quick Actions -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    <!-- Recent Announcements -->
+    <div class="rounded-lg border bg-white p-4">
+      <div class="flex items-center mb-4">
+        <span class="mr-2">📢</span>
+        <span class="text-lg font-semibold">Recent Announcements</span>
+      </div>
+      <div class="space-y-4">
+        <div
+          *ngFor="let announcement of recentAnnouncements"
+          class="border-l-4 border-primary pl-4 py-2"
+        >
+          <h4 class="font-medium text-foreground">{{ announcement.title }}</h4>
+          <p class="text-sm text-muted-foreground line-clamp-2">
+            {{ announcement.content }}
+          </p>
+          <div class="flex items-center justify-between mt-2">
+            <span class="text-xs text-muted-foreground">
+              {{ announcement.date | date : "shortDate" }}
+            </span>
+            <span
+              class="text-xs px-2 py-1 rounded-full"
+              [ngClass]="
+                announcement.priority === 'High'
+                  ? 'bg-destructive text-destructive-foreground'
+                  : announcement.priority === 'Medium'
+                  ? 'bg-warning text-warning-foreground'
+                  : 'bg-muted text-muted-foreground'
+              "
+            >
+              {{ announcement.priority }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="rounded-lg border bg-white p-4">
+      <div class="flex items-center mb-4">
+        <span class="mr-2">⚡</span>
+        <span class="text-lg font-semibold">Quick Actions</span>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <button
+          class="p-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary-dark transition-colors"
+        >
+          <div class="text-2xl mb-2">👥</div>
+          <div class="text-sm font-medium">Add Student</div>
+        </button>
+        <button
+          class="p-4 bg-success text-success-foreground rounded-lg hover:opacity-90 transition-opacity"
+        >
+          <div class="text-2xl mb-2">📋</div>
+          <div class="text-sm font-medium">Take Attendance</div>
+        </button>
+        <button
+          class="p-4 bg-warning text-warning-foreground rounded-lg hover:opacity-90 transition-opacity"
+        >
+          <div class="text-2xl mb-2">📝</div>
+          <div class="text-sm font-medium">Schedule Exam</div>
+        </button>
+        <button
+          class="p-4 bg-accent text-accent-foreground rounded-lg hover:opacity-90 transition-opacity"
+        >
+          <div class="text-2xl mb-2">📢</div>
+          <div class="text-sm font-medium">New Announcement</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

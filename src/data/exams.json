@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "name": "Mid-Term Examination",
+    "class": "10A",
+    "subject": "Mathematics",
+    "date": "2024-07-15",
+    "time": "09:00 AM",
+    "duration": "3 hours",
+    "totalMarks": 100,
+    "teacher": "Dr. Sarah Connor",
+    "room": "Room 201",
+    "status": "Upcoming"
+  },
+  {
+    "id": 2,
+    "name": "Unit Test 2",
+    "class": "11A",
+    "subject": "Physics",
+    "date": "2024-07-18",
+    "time": "10:00 AM",
+    "duration": "2 hours",
+    "totalMarks": 80,
+    "teacher": "Mrs. Jennifer Lee",
+    "room": "Room 301",
+    "status": "Upcoming"
+  },
+  {
+    "id": 3,
+    "name": "Monthly Assessment",
+    "class": "9A",
+    "subject": "English",
+    "date": "2024-07-20",
+    "time": "11:00 AM",
+    "duration": "2.5 hours",
+    "totalMarks": 90,
+    "teacher": "Mr. John Davis",
+    "room": "Room 101",
+    "status": "Upcoming"
+  },
+  {
+    "id": 4,
+    "name": "Chemistry Practical",
+    "class": "11B",
+    "subject": "Chemistry",
+    "date": "2024-07-12",
+    "time": "02:00 PM",
+    "duration": "2 hours",
+    "totalMarks": 50,
+    "teacher": "Ms. Maria Rodriguez",
+    "room": "Chemistry Lab",
+    "status": "Completed"
+  },
+  {
+    "id": 5,
+    "name": "Final Examination",
+    "class": "12A",
+    "subject": "Computer Science",
+    "date": "2024-07-25",
+    "time": "09:00 AM",
+    "duration": "3 hours",
+    "totalMarks": 100,
+    "teacher": "Mr. Ahmed Hassan",
+    "room": "Computer Lab",
+    "status": "Upcoming"
+  },
+  {
+    "id": 6,
+    "name": "History Quiz",
+    "class": "10A",
+    "subject": "History",
+    "date": "2024-07-08",
+    "time": "03:00 PM",
+    "duration": "1 hour",
+    "totalMarks": 25,
+    "teacher": "Mr. Robert Kim",
+    "room": "Room 201",
+    "status": "Completed"
+  }
+]

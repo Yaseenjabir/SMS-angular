@@ -1,0 +1,170 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-foreground">Exams</h1>
+    <button hlmBtn class="bg-primary hover:bg-primary-dark">
+      ➕ Schedule Exam
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="flex-1">
+      <input
+        hlmInput
+        placeholder="Search exams by name, subject, or class..."
+        [(ngModel)]="searchTerm"
+        class="w-full"
+      />
+    </div>
+    <select
+      [(ngModel)]="statusFilter"
+      class="w-full sm:w-48 h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <option value="all">All Status</option>
+      <option value="Upcoming">Upcoming</option>
+      <option value="Ongoing">Ongoing</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Upcoming Exams
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-primary">
+          {{ upcomingExamsCount }}
+        </div>
+      </div>
+    </div>
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Completed Exams
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-success">
+          {{ completedExamsCount }}
+        </div>
+      </div>
+    </div>
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Total Exams
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-foreground">
+          {{ totalExamsCount }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exams List -->
+  <div class="space-y-4">
+    <div
+      *ngFor="let exam of sortedExams"
+      hlmCard
+      class="hover:shadow-lg transition-shadow"
+    >
+      <div hlmCardContent class="p-6">
+        <div
+          class="flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+        >
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h3 class="text-xl font-semibold text-foreground">
+                {{ exam.name }}
+              </h3>
+              <span hlmBadge [class]="getStatusColor(exam.status)">
+                {{ exam.status }}
+              </span>
+            </div>
+
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"
+            >
+              <div class="flex items-center space-x-2">
+                <span class="text-muted-foreground">📚</span>
+                <div>
+                  <p class="font-medium">{{ exam.subject }}</p>
+                  <p class="text-muted-foreground">Subject</p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <span class="text-muted-foreground">🏫</span>
+                <div>
+                  <p class="font-medium">{{ exam.class }}</p>
+                  <p class="text-muted-foreground">Class</p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <span class="text-muted-foreground">📅</span>
+                <div>
+                  <p class="font-medium">{{ formatDate(exam.date) }}</p>
+                  <p class="text-muted-foreground">
+                    {{ formatTime(exam.time) }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <span class="text-muted-foreground">⏱️</span>
+                <div>
+                  <p class="font-medium">{{ exam.duration }}</p>
+                  <p class="text-muted-foreground">
+                    {{ exam.totalMarks }} marks
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3 pt-3 border-t">
+              <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center space-x-4">
+                  <span class="text-muted-foreground">
+                    👩‍🏫 <strong>{{ exam.teacher }}</strong>
+                  </span>
+                  <span class="text-muted-foreground">
+                    📍 <strong>{{ exam.room }}</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2 lg:flex-col">
+            <button hlmBtn variant="outline" size="sm">View Details</button>
+            <button
+              *ngIf="exam.status === 'Upcoming'"
+              hlmBtn
+              size="sm"
+              class="bg-primary hover:bg-primary-dark"
+            >
+              Edit Exam
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No results message -->
+  <div *ngIf="filteredExams.length === 0" class="text-center py-12">
+    <div class="text-6xl mb-4">📝</div>
+    <h3 class="text-xl font-semibold mb-2">No exams found</h3>
+    <p class="text-muted-foreground">
+      Try adjusting your search criteria or schedule a new exam.
+    </p>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "title": "Summer Break Schedule",
+    "content": "Summer break will commence from July 20th to August 15th. All students are advised to complete their assignments before the break.",
+    "date": "2024-07-02",
+    "author": "Principal",
+    "priority": "High",
+    "targetAudience": "All Students",
+    "status": "Active",
+    "attachments": []
+  },
+  {
+    "id": 2,
+    "title": "Parent-Teacher Meeting",
+    "content": "Parent-teacher meetings are scheduled for July 12th and 13th. Please contact your class teacher to book an appointment.",
+    "date": "2024-07-01",
+    "author": "Academic Coordinator",
+    "priority": "Medium",
+    "targetAudience": "Parents",
+    "status": "Active",
+    "attachments": ["PTM_Schedule.pdf"]
+  },
+  {
+    "id": 3,
+    "title": "Science Fair Registration",
+    "content": "Registration for the annual science fair is now open. Interested students can register with their science teachers by July 10th.",
+    "date": "2024-06-28",
+    "author": "Science Department",
+    "priority": "Medium",
+    "targetAudience": "Students (9-12)",
+    "status": "Active",
+    "attachments": ["Science_Fair_Guidelines.pdf"]
+  },
+  {
+    "id": 4,
+    "title": "Library Book Return Reminder",
+    "content": "All students are reminded to return borrowed books before July 15th. Late fees will be applicable for overdue books.",
+    "date": "2024-06-25",
+    "author": "Librarian",
+    "priority": "Low",
+    "targetAudience": "All Students",
+    "status": "Active",
+    "attachments": []
+  },
+  {
+    "id": 5,
+    "title": "Sports Day Postponed",
+    "content": "Due to weather conditions, Sports Day has been postponed to July 22nd. Further updates will be communicated soon.",
+    "date": "2024-06-20",
+    "author": "Sports Department",
+    "priority": "High",
+    "targetAudience": "All Students",
+    "status": "Archived",
+    "attachments": []
+  },
+  {
+    "id": 6,
+    "title": "New Computer Lab Inauguration",
+    "content": "We are pleased to announce the inauguration of our new computer lab on July 8th at 10:00 AM. All students and staff are invited.",
+    "date": "2024-07-03",
+    "author": "IT Department",
+    "priority": "Medium",
+    "targetAudience": "All",
+    "status": "Active",
+    "attachments": ["Lab_Specifications.pdf"]
+  }
+]

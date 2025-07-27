@@ -1,5 +1,3 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -13,7 +11,132 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@spartan-ng/helm/accordion": [
+        "./components/ui/ui-accordion-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/alert": [
+        "./components/ui/ui-alert-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/alert-dialog": [
+        "./components/ui/ui-alert-dialog-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/aspect-ratio": [
+        "./components/ui/ui-aspect-ratio-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/avatar": [
+        "./components/ui/ui-avatar-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/badge": [
+        "./components/ui/ui-badge-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/breadcrumb": [
+        "./components/ui/ui-breadcrumb-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/button": [
+        "./components/ui/ui-button-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/calendar": [
+        "./components/ui/ui-calendar-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/card": [
+        "./components/ui/ui-card-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/carousel": [
+        "./components/ui/ui-carousel-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/checkbox": [
+        "./components/ui/ui-checkbox-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/command": [
+        "./components/ui/ui-command-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/date-picker": [
+        "./components/ui/ui-date-picker-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/dialog": [
+        "./components/ui/ui-dialog-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/form-field": [
+        "./components/ui/ui-form-field-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/hover-card": [
+        "./components/ui/ui-hover-card-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/icon": [
+        "./components/ui/ui-icon-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/input": [
+        "./components/ui/ui-input-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/input-otp": [
+        "./components/ui/ui-input-otp-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/label": [
+        "./components/ui/ui-label-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/menu": [
+        "./components/ui/ui-menu-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/pagination": [
+        "./components/ui/ui-pagination-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/popover": [
+        "./components/ui/ui-popover-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/progress": [
+        "./components/ui/ui-progress-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/radio-group": [
+        "./components/ui/ui-radio-group-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/scroll-area": [
+        "./components/ui/ui-scroll-area-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/select": [
+        "./components/ui/ui-select-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/separator": [
+        "./components/ui/ui-separator-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/sheet": [
+        "./components/ui/ui-sheet-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/skeleton": [
+        "./components/ui/ui-skeleton-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/slider": [
+        "./components/ui/ui-slider-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/sonner": [
+        "./components/ui/ui-sonner-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/spinner": [
+        "./components/ui/ui-spinner-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/switch": [
+        "./components/ui/ui-switch-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/table": [
+        "./components/ui/ui-table-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/tabs": [
+        "./components/ui/ui-tabs-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/toggle": [
+        "./components/ui/ui-toggle-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/toggle-group": [
+        "./components/ui/ui-toggle-group-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/tooltip": [
+        "./components/ui/ui-tooltip-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/typography": [
+        "./components/ui/ui-typography-helm/src/index.ts"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

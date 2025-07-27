@@ -1,0 +1,204 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-foreground">Fee Management</h1>
+    <button hlmBtn class="bg-primary hover:bg-primary-dark">
+      💰 Record Payment
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Total Fees
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-foreground">
+          {{ formatCurrency(totalAmount) }}
+        </div>
+        <p class="text-sm text-muted-foreground">All students</p>
+      </div>
+    </div>
+
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Collected
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-success">
+          {{ formatCurrency(paidAmount) }}
+        </div>
+        <p class="text-sm text-muted-foreground">{{ paidCount }} payments</p>
+      </div>
+    </div>
+
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Outstanding
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-destructive">
+          {{ formatCurrency(dueAmount) }}
+        </div>
+        <p class="text-sm text-muted-foreground">
+          {{ dueCount + partialCount }} pending
+        </p>
+      </div>
+    </div>
+
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Collection Rate
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-primary">
+          {{ collectionRate.toFixed(1) }}%
+        </div>
+        <p class="text-sm text-muted-foreground">Success rate</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="flex-1">
+      <input
+        hlmInput
+        placeholder="Search by student name, roll number, or class..."
+        [(ngModel)]="searchTerm"
+        class="w-full"
+      />
+    </div>
+    <select
+      [(ngModel)]="statusFilter"
+      class="w-full sm:w-48 h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <option value="all">All Status</option>
+      <option value="Paid">Paid</option>
+      <option value="Due">Due</option>
+      <option value="Partial">Partial</option>
+    </select>
+  </div>
+
+  <!-- Fees Table -->
+  <div hlmCard>
+    <div hlmCardHeader>
+      <span hlmCardTitle>Fee Records</span>
+    </div>
+    <div hlmCardContent>
+      <div class="overflow-x-auto">
+        <table hlmTable>
+          <thead hlmThead>
+            <tr hlmTr>
+              <th hlmTh>Student</th>
+              <th hlmTh>Class</th>
+              <th hlmTh>Total Amount</th>
+              <th hlmTh>Paid Amount</th>
+              <th hlmTh>Due Amount</th>
+              <th hlmTh>Status</th>
+              <th hlmTh>Due Date</th>
+              <th hlmTh>Actions</th>
+            </tr>
+          </thead>
+          <tbody hlmTbody>
+            <tr hlmTr *ngFor="let fee of filteredFees">
+              <td hlmTd>
+                <div>
+                  <p class="font-medium">{{ fee.studentName }}</p>
+                  <p class="text-sm text-muted-foreground">
+                    Roll: {{ fee.rollNo }}
+                  </p>
+                </div>
+              </td>
+              <td hlmTd class="font-medium">{{ fee.class }}</td>
+              <td hlmTd class="font-medium">
+                {{ formatCurrency(fee.totalAmount) }}
+              </td>
+              <td hlmTd class="text-success font-medium">
+                {{ formatCurrency(fee.paidAmount) }}
+              </td>
+              <td hlmTd class="text-destructive font-medium">
+                {{ formatCurrency(fee.dueAmount) }}
+              </td>
+              <td hlmTd>
+                <span hlmBadge [class]="getStatusColor(fee.paymentStatus)">
+                  {{ fee.paymentStatus }}
+                </span>
+              </td>
+              <td hlmTd class="text-sm">
+                {{ formatDate(fee.dueDate) }}
+              </td>
+              <td hlmTd>
+                <div class="flex space-x-2">
+                  <button
+                    *ngIf="fee.paymentStatus !== 'Paid'"
+                    hlmBtn
+                    size="sm"
+                    variant="outline"
+                  >
+                    💳 Pay
+                  </button>
+                  <button hlmBtn size="sm" variant="ghost">👁️ View</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment History -->
+  <div hlmCard>
+    <div hlmCardHeader>
+      <span hlmCardTitle>Recent Payments</span>
+    </div>
+    <div hlmCardContent>
+      <div class="space-y-4">
+        <div
+          *ngFor="let fee of recentPayments"
+          class="flex items-center justify-between p-4 bg-muted rounded-lg"
+        >
+          <div class="flex items-center space-x-4">
+            <div
+              class="w-10 h-10 bg-success rounded-full flex items-center justify-center text-success-foreground"
+            >
+              💰
+            </div>
+            <div>
+              <p class="font-medium">{{ fee.studentName }}</p>
+              <p class="text-sm text-muted-foreground">
+                {{ fee.class }} • {{ fee.paymentMethod }} •
+                {{ formatDate(fee.paymentDate) }}
+              </p>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="font-medium text-success">
+              {{ formatCurrency(fee.paidAmount) }}
+            </p>
+            <p class="text-sm text-muted-foreground">{{ fee.receipt }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No results message -->
+  <div *ngIf="filteredFees.length === 0" class="text-center py-12">
+    <div class="text-6xl mb-4">💰</div>
+    <h3 class="text-xl font-semibold mb-2">No fee records found</h3>
+    <p class="text-muted-foreground">
+      Try adjusting your search criteria or add new fee records.
+    </p>
+  </div>
+</div>

@@ -1,1 +1,91 @@
-<p>students works!</p>
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-foreground">Students</h1>
+    <button hlmBtn class="bg-primary hover:bg-primary-dark">
+      ➕ Add Student
+    </button>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="flex flex-col md:flex-row md:items-center gap-4">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Search by name or roll number..."
+      class="border rounded-lg px-3 py-2 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-primary"
+    />
+    <select
+      [(ngModel)]="classFilter"
+      class="border rounded-lg px-3 py-2 w-full md:w-48 focus:outline-none focus:ring-2 focus:ring-primary"
+    >
+      <option value="all">All Classes</option>
+      <option *ngFor="let cls of uniqueClasses" [value]="cls">
+        Class {{ cls }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Students Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <div
+      *ngFor="let student of filteredStudents"
+      class="hover:shadow-lg transition-shadow rounded-lg border bg-white p-4 flex flex-col gap-2"
+    >
+      <div class="pb-3 flex items-center justify-between">
+        <div class="text-lg font-semibold">{{ student.name }}</div>
+        <span
+          class="px-2 py-1 rounded-full text-xs font-medium"
+          [ngClass]="
+            student.status === 'Active'
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-700'
+          "
+        >
+          {{ student.status }}
+        </span>
+      </div>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span class="text-muted-foreground">Class:</span>
+          <p class="font-medium">{{ student.class }}{{ student.section }}</p>
+        </div>
+        <div>
+          <span class="text-muted-foreground">Roll No:</span>
+          <p class="font-medium">{{ student.rollNo }}</p>
+        </div>
+        <div>
+          <span class="text-muted-foreground">Phone:</span>
+          <p class="font-medium">{{ student.phone }}</p>
+        </div>
+        <div>
+          <span class="text-muted-foreground">Email:</span>
+          <p class="font-medium text-xs">{{ student.email }}</p>
+        </div>
+      </div>
+      <div class="pt-3 border-t space-y-2">
+        <div class="flex gap-2">
+          <button
+            class="flex-1 border rounded px-3 py-1 text-sm hover:bg-gray-100"
+          >
+            Edit
+          </button>
+          <button
+            class="flex-1 border rounded px-3 py-1 text-sm hover:bg-gray-100"
+          >
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- No results message  -->
+  @if(filteredStudents.length === 0){
+  <div class="text-center py-12">
+    <div class="text-6xl mb-4">👨‍🎓</div>
+    <h3 class="text-xl font-semibold mb-2">No students found</h3>
+    <p class="text-muted-foreground">
+      Try adjusting your search criteria or add a new student.
+    </p>
+  </div>
+  }
+</div>

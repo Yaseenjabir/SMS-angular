@@ -1,0 +1,226 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-foreground">Teachers</h1>
+    <button
+      hlmBtn
+      class="bg-primary hover:bg-primary-dark"
+      (click)="isAddFormOpen = true"
+    >
+      ➕ Add Teacher
+    </button>
+  </div>
+  <!-- {{ printData() }} -->
+  <!-- Search -->
+  <div class="max-w-md">
+    <input
+      hlmInput
+      placeholder="Search teachers by name, subject, or department..."
+      [(ngModel)]="searchTerm"
+      class="w-full"
+    />
+  </div>
+
+  <!-- Teachers Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      *ngFor="let teacher of filteredTeachers"
+      class="border rounded-lg shadow-sm hover:shadow-lg transition-shadow bg-card"
+    >
+      <!-- Card Header -->
+      <div class="p-6 pb-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold">{{ teacher.name }}</h3>
+          <span
+            class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800"
+          >
+            {{ teacher.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Card Content -->
+      <div class="px-6 pb-6 space-y-3">
+        <div class="space-y-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl">📚</span>
+            <div>
+              <p class="font-medium">{{ teacher.subject }}</p>
+              <p class="text-sm text-muted-foreground">
+                {{ teacher.department }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl">📞</span>
+            <div>
+              <p class="font-medium text-sm">{{ teacher.phone }}</p>
+              <p class="text-sm text-muted-foreground">{{ teacher.email }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl">🎓</span>
+            <div>
+              <p class="font-medium text-sm">{{ teacher.qualification }}</p>
+              <p class="text-sm text-muted-foreground">
+                {{ teacher.experience }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t space-y-2">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm text-muted-foreground">Classes:</span>
+            <div class="flex flex-wrap gap-1">
+              <span
+                *ngFor="let cls of teacher.classes"
+                class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-secondary text-secondary-foreground"
+              >
+                {{ cls }}
+              </span>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <button
+              class="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+            >
+              Edit
+            </button>
+
+            <!-- SpartanUI Dialog -->
+            <hlm-dialog #profileDialog>
+              <button
+                brnDialogTrigger
+                class="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                (click)="setSelectedTeacher(teacher)"
+              >
+                View Profile
+              </button>
+
+              <hlm-dialog-content *brnDialogContent="let ctx" class="max-w-2xl">
+                <hlm-dialog-header>
+                  <h3 brnDialogTitle hlm>
+                    Teacher Profile - {{ selectedTeacher?.name }}
+                  </h3>
+                </hlm-dialog-header>
+
+                <div *ngIf="selectedTeacher" class="space-y-6">
+                  <!-- Personal Information -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                      <h3 class="font-semibold text-lg">
+                        Personal Information
+                      </h3>
+                      <div class="space-y-2">
+                        <div>
+                          <span class="text-muted-foreground">Full Name:</span>
+                          <p class="font-medium">{{ selectedTeacher.name }}</p>
+                        </div>
+                        <div>
+                          <span class="text-muted-foreground">Phone:</span>
+                          <p class="font-medium">{{ selectedTeacher.phone }}</p>
+                        </div>
+                        <div>
+                          <span class="text-muted-foreground">Email:</span>
+                          <p class="font-medium">{{ selectedTeacher.email }}</p>
+                        </div>
+                        <div>
+                          <span class="text-muted-foreground">Status:</span>
+                          <span
+                            class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800"
+                          >
+                            {{ selectedTeacher.status }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <h3 class="font-semibold text-lg">
+                        Professional Information
+                      </h3>
+                      <div class="space-y-2">
+                        <div>
+                          <span class="text-muted-foreground">Subject:</span>
+                          <p class="font-medium">
+                            {{ selectedTeacher.subject }}
+                          </p>
+                        </div>
+                        <div>
+                          <span class="text-muted-foreground">Department:</span>
+                          <p class="font-medium">
+                            {{ selectedTeacher.department }}
+                          </p>
+                        </div>
+                        <div>
+                          <span class="text-muted-foreground"
+                            >Qualification:</span
+                          >
+                          <p class="font-medium">
+                            {{ selectedTeacher.qualification }}
+                          </p>
+                        </div>
+                        <div>
+                          <span class="text-muted-foreground">Experience:</span>
+                          <p class="font-medium">
+                            {{ selectedTeacher.experience }}
+                          </p>
+                        </div>
+                        <div>
+                          <span class="text-muted-foreground"
+                            >Joining Date:</span
+                          >
+                          <p class="font-medium">
+                            {{ selectedTeacher.joiningDate }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Classes -->
+                  <div class="space-y-4">
+                    <h3 class="font-semibold text-lg">Teaching Classes</h3>
+                    <div class="flex flex-wrap gap-2">
+                      <span
+                        *ngFor="let cls of selectedTeacher.classes"
+                        class="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium bg-secondary text-secondary-foreground"
+                      >
+                        Class {{ cls }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </hlm-dialog-content>
+            </hlm-dialog>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No results message -->
+  <div *ngIf="filteredTeachers.length === 0" class="text-center py-12">
+    <div class="text-6xl mb-4">👩‍🏫</div>
+    <h3 class="text-xl font-semibold mb-2">No teachers found</h3>
+    <p class="text-muted-foreground">
+      Try adjusting your search criteria or add a new teacher.
+    </p>
+  </div>
+
+  <!-- Add Teacher Form (Placeholder) -->
+  <div *ngIf="isAddFormOpen">
+    <!-- Add your TeacherForm component here -->
+    <div class="p-6 bg-white rounded shadow">Add Teacher Form goes here</div>
+  </div>
+
+  <!-- Edit Teacher Form (Placeholder) -->
+  <div *ngIf="isEditFormOpen">
+    <!-- Add your TeacherForm component here -->
+    <div class="p-6 bg-white rounded shadow">Edit Teacher Form goes here</div>
+  </div>
+</div>

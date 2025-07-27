@@ -1,28 +1,42 @@
 <div class="flex min-h-screen">
   <!-- Sidebar -->
-  <aside class="w-64 bg-gray-800 text-white p-4">
-    <h2 class="text-xl font-bold mb-6">My Dashboard</h2>
-    <nav class="flex flex-col gap-4">
-      <a routerLink="/" routerLinkActive="font-semibold" class="hover:underline"
-        >Dashboardddddddddddd</a
-      >
-      <a
-        routerLink="/students"
-        routerLinkActive="font-semibold"
-        class="hover:underline"
-        >Students</a
-      >
-      <a
-        routerLink="/classes"
-        routerLinkActive="font-semibold"
-        class="hover:underline"
-        >Classes</a
-      >
-    </nav>
-  </aside>
+  <div
+    [ngClass]="[
+      'bg-primary',
+      'text-primary-foreground',
+      'transition-all',
+      'duration-300',
+      'flex',
+      'flex-col',
+      'fixed',
+      'md:static',
+      'h-full',
+      'inset-y-0',
+      'left-0',
+      'z-50',
+      'bg-white',
+      isCollapsed
+        ? 'w-16 -translate-x-full md:translate-x-0'
+        : 'w-64 translate-x-0'
+    ]"
+  >
+    <app-sidebar
+      [isCollapsed]="isCollapsed"
+      (onToggle)="isSidebarCollapsed()"
+    ></app-sidebar>
+  </div>
+  <div
+    *ngIf="!isCollapsed"
+    class="md:hidden fixed inset-0 z-40 bg-[#00000051]"
+    (click)="isSidebarCollapsed()"
+  ></div>
 
   <!-- Main Content -->
-  <main class="flex-1 bg-gray-100 p-6">
-    <router-outlet></router-outlet>
-  </main>
+  <div class="flex-1 flex flex-col md:ml-0">
+    <app-topbar (toggleSidebar)="isSidebarCollapsed()"></app-topbar>
+    <!-- <h1 class="text-red-500">Hello world</h1> -->
+    <main class="flex-1 p-6 overflow-auto">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>

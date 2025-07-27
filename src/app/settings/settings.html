@@ -1,0 +1,278 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-foreground">Settings</h1>
+    <button hlmBtn variant="destructive" (click)="handleLogout()">
+      🚪 Logout
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Profile Settings -->
+    <div class="lg:col-span-2 space-y-6">
+      <div hlmCard>
+        <div hlmCardHeader>
+          <span hlmCardTitle class="flex items-center">
+            <span class="mr-2">👤</span>
+            Profile Information
+          </span>
+        </div>
+        <div hlmCardContent class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label hlmLabel for="name">Full Name</label>
+              <input hlmInput id="name" [(ngModel)]="profileData.name" />
+            </div>
+            <div class="space-y-2">
+              <label hlmLabel for="email">Email Address</label>
+              <input
+                hlmInput
+                id="email"
+                type="email"
+                [(ngModel)]="profileData.email"
+              />
+            </div>
+            <div class="space-y-2">
+              <label hlmLabel for="phone">Phone Number</label>
+              <input hlmInput id="phone" [(ngModel)]="profileData.phone" />
+            </div>
+            <div class="space-y-2">
+              <label hlmLabel for="school">School Name</label>
+              <input hlmInput id="school" [(ngModel)]="profileData.school" />
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label hlmLabel for="address">Address</label>
+            <input hlmInput id="address" [(ngModel)]="profileData.address" />
+          </div>
+          <button hlmBtn (click)="handleSaveProfile()" [disabled]="isLoading">
+            {{ isLoading ? "Saving..." : "Save Profile" }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Notification Settings -->
+      <div hlmCard>
+        <div hlmCardHeader>
+          <span hlmCardTitle class="flex items-center">
+            <span class="mr-2">🔔</span>
+            Notification Preferences
+          </span>
+        </div>
+        <div hlmCardContent class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="space-y-0.5">
+              <label hlmLabel>Email Notifications</label>
+              <p class="text-sm text-muted-foreground">
+                Receive important updates via email
+              </p>
+            </div>
+            <hlm-switch
+              [checked]="notificationSettings.emailNotifications"
+              (checkedChange)="notificationSettings.emailNotifications = $event"
+            />
+          </div>
+          <div hlmSeparator></div>
+          <div class="flex items-center justify-between">
+            <div class="space-y-0.5">
+              <label hlmLabel>SMS Notifications</label>
+              <p class="text-sm text-muted-foreground">
+                Receive urgent alerts via SMS
+              </p>
+            </div>
+            <hlm-switch
+              [checked]="notificationSettings.smsNotifications"
+              (checkedChange)="notificationSettings.smsNotifications = $event"
+            />
+          </div>
+          <div hlmSeparator></div>
+          <div class="flex items-center justify-between">
+            <div class="space-y-0.5">
+              <label hlmLabel>Push Notifications</label>
+              <p class="text-sm text-muted-foreground">
+                Browser push notifications
+              </p>
+            </div>
+            <hlm-switch
+              [checked]="notificationSettings.pushNotifications"
+              (checkedChange)="notificationSettings.pushNotifications = $event"
+            />
+          </div>
+          <div hlmSeparator></div>
+          <div class="flex items-center justify-between">
+            <div class="space-y-0.5">
+              <label hlmLabel>Weekly Reports</label>
+              <p class="text-sm text-muted-foreground">
+                Receive weekly summary reports
+              </p>
+            </div>
+            <hlm-switch
+              [checked]="notificationSettings.weeklyReports"
+              (checkedChange)="notificationSettings.weeklyReports = $event"
+            />
+          </div>
+          <div hlmSeparator></div>
+          <div class="flex items-center justify-between">
+            <div class="space-y-0.5">
+              <label hlmLabel>System Alerts</label>
+              <p class="text-sm text-muted-foreground">
+                Critical system notifications
+              </p>
+            </div>
+            <hlm-switch
+              [checked]="notificationSettings.systemAlerts"
+              (checkedChange)="notificationSettings.systemAlerts = $event"
+            />
+          </div>
+          <button
+            hlmBtn
+            (click)="handleSaveNotifications()"
+            [disabled]="isLoading"
+          >
+            {{ isLoading ? "Saving..." : "Save Notifications" }}
+          </button>
+        </div>
+      </div>
+
+      <!-- System Settings -->
+      <div hlmCard>
+        <div hlmCardHeader>
+          <span hlmCardTitle class="flex items-center">
+            <span class="mr-2">⚙️</span>
+            System Preferences
+          </span>
+        </div>
+        <div hlmCardContent class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="space-y-0.5">
+              <label hlmLabel>Dark Mode</label>
+              <p class="text-sm text-muted-foreground">Switch to dark theme</p>
+            </div>
+            <hlm-switch
+              [checked]="systemSettings.darkMode"
+              (checkedChange)="systemSettings.darkMode = $event"
+            />
+          </div>
+          <div hlmSeparator></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label hlmLabel>Language</label>
+              <input hlmInput [value]="systemSettings.language" readonly />
+            </div>
+            <div class="space-y-2">
+              <label hlmLabel>Timezone</label>
+              <input hlmInput [value]="systemSettings.timezone" readonly />
+            </div>
+            <div class="space-y-2">
+              <label hlmLabel>Date Format</label>
+              <input hlmInput [value]="systemSettings.dateFormat" readonly />
+            </div>
+            <div class="space-y-2">
+              <label hlmLabel>Currency</label>
+              <input hlmInput [value]="systemSettings.currency" readonly />
+            </div>
+          </div>
+          <button hlmBtn (click)="handleSaveSystem()" [disabled]="isLoading">
+            {{ isLoading ? "Saving..." : "Save System Settings" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions & Account Info -->
+    <div class="space-y-6">
+      <!-- Account Summary -->
+      <div hlmCard>
+        <div hlmCardHeader>
+          <span hlmCardTitle class="flex items-center">
+            <span class="mr-2">📊</span>
+            Account Summary
+          </span>
+        </div>
+        <div hlmCardContent class="space-y-4">
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-2xl font-bold mx-auto mb-4"
+            >
+              {{ user.name.charAt(0) }}
+            </div>
+            <h3 class="font-semibold text-lg">{{ user.name }}</h3>
+            <p class="text-muted-foreground">{{ user.role }}</p>
+          </div>
+          <div hlmSeparator></div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Account Type:</span>
+              <span class="font-medium">Administrator</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Last Login:</span>
+              <span class="font-medium">Today</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-muted-foreground">Member Since:</span>
+              <span class="font-medium">Jan 2024</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div hlmCard>
+        <div hlmCardHeader>
+          <span hlmCardTitle class="flex items-center">
+            <span class="mr-2">⚡</span>
+            Quick Actions
+          </span>
+        </div>
+        <div hlmCardContent class="space-y-3">
+          <button hlmBtn variant="outline" class="w-full justify-start">
+            🔐 Change Password
+          </button>
+          <button hlmBtn variant="outline" class="w-full justify-start">
+            📤 Export Data
+          </button>
+          <button hlmBtn variant="outline" class="w-full justify-start">
+            📊 Generate Report
+          </button>
+          <button hlmBtn variant="outline" class="w-full justify-start">
+            🛠️ System Backup
+          </button>
+          <div hlmSeparator></div>
+          <button
+            hlmBtn
+            variant="destructive"
+            class="w-full"
+            (click)="handleLogout()"
+          >
+            🚪 Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Help & Support -->
+      <div hlmCard>
+        <div hlmCardHeader>
+          <span hlmCardTitle class="flex items-center">
+            <span class="mr-2">❓</span>
+            Help & Support
+          </span>
+        </div>
+        <div hlmCardContent class="space-y-3">
+          <button hlmBtn variant="ghost" class="w-full justify-start">
+            📖 Documentation
+          </button>
+          <button hlmBtn variant="ghost" class="w-full justify-start">
+            💬 Contact Support
+          </button>
+          <button hlmBtn variant="ghost" class="w-full justify-start">
+            🐛 Report Bug
+          </button>
+          <button hlmBtn variant="ghost" class="w-full justify-start">
+            💡 Feature Request
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

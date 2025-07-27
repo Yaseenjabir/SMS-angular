@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Sarah Connor",
+    "subject": "Mathematics",
+    "phone": "+1-555-1001",
+    "email": "sarah.connor@school.edu",
+    "department": "Science",
+    "experience": "15 years",
+    "qualification": "PhD in Mathematics",
+    "joiningDate": "2010-08-15",
+    "status": "Active",
+    "classes": ["10A", "11A", "12A"]
+  },
+  {
+    "id": 2,
+    "name": "Mr. John Davis",
+    "subject": "English Literature",
+    "phone": "+1-555-1002",
+    "email": "john.davis@school.edu",
+    "department": "Languages",
+    "experience": "12 years",
+    "qualification": "Master's in English",
+    "joiningDate": "2012-06-01",
+    "status": "Active",
+    "classes": ["9A", "10A", "11B"]
+  },
+  {
+    "id": 3,
+    "name": "Ms. Maria Rodriguez",
+    "subject": "Chemistry",
+    "phone": "+1-555-1003",
+    "email": "maria.rodriguez@school.edu",
+    "department": "Science",
+    "experience": "8 years",
+    "qualification": "Master's in Chemistry",
+    "joiningDate": "2016-03-20",
+    "status": "Active",
+    "classes": ["11A", "11B", "12A"]
+  },
+  {
+    "id": 4,
+    "name": "Mr. Robert Kim",
+    "subject": "History",
+    "phone": "+1-555-1004",
+    "email": "robert.kim@school.edu",
+    "department": "Social Studies",
+    "experience": "10 years",
+    "qualification": "Master's in History",
+    "joiningDate": "2014-09-01",
+    "status": "Active",
+    "classes": ["9A", "10A", "11A"]
+  },
+  {
+    "id": 5,
+    "name": "Mrs. Jennifer Lee",
+    "subject": "Physics",
+    "phone": "+1-555-1005",
+    "email": "jennifer.lee@school.edu",
+    "department": "Science",
+    "experience": "18 years",
+    "qualification": "PhD in Physics",
+    "joiningDate": "2008-01-10",
+    "status": "Active",
+    "classes": ["11A", "12A"]
+  },
+  {
+    "id": 6,
+    "name": "Mr. Ahmed Hassan",
+    "subject": "Computer Science",
+    "phone": "+1-555-1006",
+    "email": "ahmed.hassan@school.edu",
+    "department": "Technology",
+    "experience": "6 years",
+    "qualification": "Master's in Computer Science",
+    "joiningDate": "2018-07-15",
+    "status": "Active",
+    "classes": ["10A", "11A", "12A"]
+  }
+]
