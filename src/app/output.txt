@@ -1,0 +1,1092 @@
+
+// classes\classes-wizard\classes-wizard.css
+.custom-select {
+  position: relative;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+// classes\classes-wizard\classes-wizard.html
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-white py-8">
+  <div class="max-w-4xl mx-auto p-6" [formGroup]="form">
+    <!-- Enhanced Progress Section -->
+    <div class="mb-8 bg-white rounded-lg shadow-md p-6 border border-slate-200">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="text-2xl font-medium text-blue-600">Create New Class</h1>
+          <p class="text-slate-500 mt-1 font-normal">
+            Set up your class with all the necessary information
+          </p>
+        </div>
+        <div class="flex flex-col items-end">
+          <div class="text-sm font-normal text-slate-500 mb-1">Progress</div>
+          <div class="text-xl font-medium text-blue-600">
+            {{ currentStep }}/4
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="relative">
+        <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+          <div
+            class="h-full rounded-full transition-all duration-500 ease-out bg-blue-500"
+            [style.width.%]="((currentStep - 1) / 3) * 100"
+          ></div>
+        </div>
+        <div class="flex justify-between mt-4">
+          <button
+            *ngFor="let step of stepLabels; let i = index"
+            class="flex flex-col items-center group transition-all duration-200"
+            (click)="goTo(i + 1)"
+            [class.opacity-50]="currentStep !== i + 1"
+          >
+            <div
+              class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-200"
+              [class.bg-blue-600]="currentStep > i + 1 || currentStep === i + 1"
+              [class.text-white]="currentStep > i + 1 || currentStep === i + 1"
+              [class.bg-slate-200]="currentStep < i + 1"
+              [class.text-slate-500]="currentStep < i + 1"
+              [class.shadow-md]="currentStep === i + 1"
+              [class.ring-2]="currentStep === i + 1"
+              [class.ring-blue-200]="currentStep === i + 1"
+            >
+              <span *ngIf="currentStep > i + 1">✓</span>
+              <span *ngIf="currentStep <= i + 1">{{ i + 1 }}</span>
+            </div>
+            <span
+              class="text-xs font-normal mt-2 text-center"
+              [class.text-blue-600]="currentStep === i + 1"
+            >
+              {{ step }}
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Class Info -->
+    <div
+      *ngIf="currentStep === 1"
+      formGroupName="step1"
+      class="animate-fade-in"
+    >
+      <div
+        class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden"
+      >
+        <div class="bg-blue-600 px-6 py-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-medium text-white">Class Information</h3>
+              <p class="text-blue-100 text-sm font-normal">
+                Basic details about your class
+              </p>
+            </div>
+            <span
+              class="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-normal"
+            >
+              Required
+            </span>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Grade <span class="text-red-500">*</span>
+              </label>
+              <div class="custom-select">
+                <select
+                  class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white appearance-none cursor-pointer"
+                  formControlName="grade"
+                  [class.border-red-300]="
+                    controlHasError(step1.get('grade'), 'required')
+                  "
+                  [class.bg-red-50]="
+                    controlHasError(step1.get('grade'), 'required')
+                  "
+                >
+                  <option value="">Select grade level</option>
+                  <ng-container
+                    *ngFor="let g of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
+                  >
+                    <option [value]="g">Grade {{ g }}</option>
+                  </ng-container>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+                >
+                  <svg
+                    class="w-5 h-5 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                *ngIf="controlHasError(step1.get('grade'), 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please select a grade level
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Section <span class="text-red-500">*</span>
+              </label>
+              <div class="custom-select">
+                <select
+                  class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white appearance-none cursor-pointer"
+                  formControlName="section"
+                  [class.border-red-300]="
+                    controlHasError(step1.get('section'), 'required')
+                  "
+                  [class.bg-red-50]="
+                    controlHasError(step1.get('section'), 'required')
+                  "
+                >
+                  <option value="">Select section</option>
+                  <option value="A">Section A</option>
+                  <option value="B">Section B</option>
+                  <option value="C">Section C</option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+                >
+                  <svg
+                    class="w-5 h-5 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                *ngIf="controlHasError(step1.get('section'), 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please select a section
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Room Number <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="999"
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white"
+                formControlName="room"
+                placeholder="Enter room number (e.g., 101)"
+                [class.border-red-300]="
+                  controlHasError(step1.get('room'), 'required') ||
+                  controlHasError(step1.get('room'), 'min')
+                "
+                [class.bg-red-50]="
+                  controlHasError(step1.get('room'), 'required') ||
+                  controlHasError(step1.get('room'), 'min')
+                "
+              />
+              <div
+                *ngIf="controlHasError(step1.get('room'), 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please enter a room number
+              </div>
+              <div
+                *ngIf="controlHasError(step1.get('room'), 'min')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Room number must be at least 1
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end mt-8">
+            <button
+              class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              (click)="next()"
+              [disabled]="!step1.valid"
+            >
+              Continue to Staff →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Staff -->
+    <div
+      *ngIf="currentStep === 2"
+      formGroupName="step2"
+      class="animate-fade-in"
+    >
+      <div
+        class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden"
+      >
+        <div class="bg-blue-600 px-6 py-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-medium text-white">Staff Assignment</h3>
+              <p class="text-blue-100 text-sm font-normal">
+                Assign a teacher to this class
+              </p>
+            </div>
+            <span
+              class="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-normal"
+            >
+              Required
+            </span>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <div class="max-w-md mx-auto">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Class Teacher <span class="text-red-500">*</span>
+              </label>
+              <div class="custom-select">
+                <select
+                  class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white appearance-none cursor-pointer"
+                  formControlName="classTeacher"
+                  [class.border-red-300]="
+                    controlHasError(step2.get('classTeacher'), 'required')
+                  "
+                  [class.bg-red-50]="
+                    controlHasError(step2.get('classTeacher'), 'required')
+                  "
+                >
+                  <option value="">Select a teacher</option>
+                  <ng-container *ngFor="let t of teacherList">
+                    <option [value]="t">{{ t }}</option>
+                  </ng-container>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+                >
+                  <svg
+                    class="w-5 h-5 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                *ngIf="controlHasError(step2.get('classTeacher'), 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please select a teacher for this class
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-8">
+            <button
+              class="px-6 py-3 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200"
+              (click)="back()"
+            >
+              ← Back
+            </button>
+            <button
+              class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              (click)="next()"
+              [disabled]="!step2.valid"
+            >
+              Continue to Schedule →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Subjects & Schedule -->
+    <div
+      *ngIf="currentStep === 3"
+      formGroupName="step3"
+      class="animate-fade-in"
+    >
+      <div
+        class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden"
+      >
+        <div class="bg-blue-600 px-6 py-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-medium text-white">
+                Subjects & Weekly Schedule
+              </h3>
+              <p class="text-blue-100 text-sm font-normal">
+                Select subjects and create weekly schedule
+              </p>
+            </div>
+            <span
+              class="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-normal"
+            >
+              Required
+            </span>
+          </div>
+        </div>
+
+        <div class="p-6 space-y-8">
+          <!-- Subjects Selection -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <label class="text-lg font-medium text-slate-700">
+                Select Subjects <span class="text-red-500">*</span>
+              </label>
+              <div class="text-sm text-slate-500 font-normal">
+                {{ getSelectedSubjectsCount() }} selected
+              </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              <button
+                *ngFor="let s of subjectsList"
+                type="button"
+                class="p-3 rounded-lg border-2 transition-all duration-200 font-normal text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                (click)="toggleSubject(s)"
+                [class.border-blue-500]="isSubjectSelected(s)"
+                [class.bg-blue-500]="isSubjectSelected(s)"
+                [class.text-white]="isSubjectSelected(s)"
+                [class.shadow-md]="isSubjectSelected(s)"
+                [class.border-slate-200]="!isSubjectSelected(s)"
+                [class.bg-slate-50]="!isSubjectSelected(s)"
+                [class.text-slate-700]="!isSubjectSelected(s)"
+                [class.hover:border-blue-300]="!isSubjectSelected(s)"
+                [class.hover:bg-blue-50]="!isSubjectSelected(s)"
+              >
+                <div class="flex items-center justify-center space-x-2">
+                  <span *ngIf="isSubjectSelected(s)" class="text-xs">✓</span>
+                  <span>{{ s }}</span>
+                </div>
+              </button>
+            </div>
+            <div
+              *ngIf="controlHasError(step3.get('subjects'), 'arrayMinLength')"
+              class="text-sm text-red-600 font-normal"
+            >
+              Please select at least one subject
+            </div>
+          </div>
+
+          <!-- Weekly Schedule -->
+          <div class="space-y-4" formGroupName="schedule">
+            <div class="flex items-center justify-between">
+              <label class="text-lg font-medium text-slate-700">
+                Weekly Schedule <span class="text-red-500">*</span>
+              </label>
+              <button
+                type="button"
+                class="text-sm text-blue-600 hover:text-blue-800 font-normal"
+                (click)="clearAllSchedules()"
+              >
+                Clear All
+              </button>
+            </div>
+            <p class="text-sm text-slate-600 mb-4 font-normal">
+              Assign subjects to each day of the week. Each day must have at
+              least one subject.
+            </p>
+
+            <div class="space-y-4">
+              <div
+                *ngFor="let day of daysOfWeek"
+                class="bg-slate-50 rounded-lg p-4 border border-slate-200 hover:bg-slate-100 transition-all duration-200"
+                [class.bg-red-50]="isDayEmpty(day)"
+                [class.border-red-200]="isDayEmpty(day)"
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <h4
+                    class="font-medium text-slate-800 capitalize flex items-center"
+                  >
+                    {{ day }}
+                    <span
+                      *ngIf="isDayEmpty(day)"
+                      class="ml-2 text-red-500 text-sm"
+                      >*</span
+                    >
+                  </h4>
+                  <div class="text-xs text-slate-500 font-normal">
+                    {{ getScheduleSubjects(day).length }} subjects
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    *ngFor="let s of getSelectedSubjects()"
+                    type="button"
+                    class="px-3 py-1.5 rounded-lg text-sm font-normal transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    (click)="toggleScheduleSubject(day, s)"
+                    [class.bg-blue-500]="isScheduleSubjectSelected(day, s)"
+                    [class.text-white]="isScheduleSubjectSelected(day, s)"
+                    [class.shadow-md]="isScheduleSubjectSelected(day, s)"
+                    [class.bg-white]="!isScheduleSubjectSelected(day, s)"
+                    [class.text-slate-700]="!isScheduleSubjectSelected(day, s)"
+                    [class.border]="!isScheduleSubjectSelected(day, s)"
+                    [class.border-slate-200]="
+                      !isScheduleSubjectSelected(day, s)
+                    "
+                    [class.hover:border-blue-300]="
+                      !isScheduleSubjectSelected(day, s)
+                    "
+                    [class.hover:bg-blue-50]="
+                      !isScheduleSubjectSelected(day, s)
+                    "
+                  >
+                    <span *ngIf="isScheduleSubjectSelected(day, s)" class="mr-1"
+                      >✓</span
+                    >
+                    {{ s }}
+                  </button>
+                </div>
+
+                <div
+                  *ngIf="isDayEmpty(day)"
+                  class="text-xs text-red-600 mt-2 font-normal"
+                >
+                  Please assign at least one subject to {{ day }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-8">
+            <button
+              class="px-6 py-3 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200"
+              (click)="back()"
+            >
+              ← Back
+            </button>
+            <button
+              class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              (click)="next()"
+              [disabled]="!step3.valid || !isScheduleComplete()"
+            >
+              Review & Finish →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Review & Submit -->
+    <div *ngIf="currentStep === 4" class="animate-fade-in">
+      <div
+        class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden"
+      >
+        <div class="bg-blue-600 px-6 py-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-medium text-white">Review & Confirm</h3>
+              <p class="text-blue-100 text-sm font-normal">
+                Please review all information before submitting
+              </p>
+            </div>
+            <span
+              class="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-normal"
+            >
+              Final Step
+            </span>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Class Information -->
+            <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+              <h4 class="font-medium text-blue-800 mb-4 flex items-center">
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  ></path>
+                </svg>
+                Class Information
+              </h4>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="font-normal text-slate-600">Grade:</span>
+                  <span class="font-medium text-slate-800">{{
+                    step1.get("grade")!.value
+                  }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-normal text-slate-600">Section:</span>
+                  <span class="font-medium text-slate-800">{{
+                    step1.get("section")!.value
+                  }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="font-normal text-slate-600">Room:</span>
+                  <span class="font-medium text-slate-800">{{
+                    step1.get("room")!.value
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Staff Information -->
+            <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+              <h4 class="font-medium text-blue-800 mb-4 flex items-center">
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  ></path>
+                </svg>
+                Staff Assignment
+              </h4>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="font-normal text-slate-600">Class Teacher:</span>
+                  <span class="font-medium text-slate-800">{{
+                    step2.get("classTeacher")!.value
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subjects and Schedule -->
+          <div class="mt-8 bg-blue-50 rounded-lg p-6 border border-blue-200">
+            <h4 class="font-medium text-blue-800 mb-4 flex items-center">
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
+              </svg>
+              Subjects & Schedule
+            </h4>
+
+            <div class="mb-6">
+              <h5 class="font-medium text-slate-700 mb-3">
+                Selected Subjects:
+              </h5>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let s of step3.get('subjects')!.value"
+                  class="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-normal"
+                  >{{ s }}</span
+                >
+              </div>
+            </div>
+
+            <div>
+              <h5 class="font-medium text-slate-700 mb-3">Weekly Schedule:</h5>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                <div
+                  *ngFor="let d of daysOfWeek"
+                  class="bg-white rounded-lg p-3 border border-slate-200"
+                >
+                  <div class="font-medium text-slate-800 capitalize mb-2">
+                    {{ d }}
+                  </div>
+                  <div class="space-y-1">
+                    <div
+                      *ngFor="let subject of getScheduleSubjects(d)"
+                      class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-normal"
+                    >
+                      {{ subject }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-8">
+            <button
+              class="px-6 py-3 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200"
+              (click)="back()"
+            >
+              ← Back
+            </button>
+            <button
+              class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
+              (click)="submit()"
+            >
+              🎉 Create Class
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hlm-toaster />
+
+// classes\classes-wizard\classes-wizard.spec.ts
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ClassesWizard } from './classes-wizard';
+
+describe('ClassesWizard', () => {
+  let component: ClassesWizard;
+  let fixture: ComponentFixture<ClassesWizard>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ClassesWizard]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(ClassesWizard);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+// classes\classes-wizard\classes-wizard.ts
+// File: classes-wizard.ts
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
+import { HlmToasterComponent } from '@spartan-ng/helm/sonner';
+
+import {
+  HlmCardDirective,
+  HlmCardHeaderDirective,
+  HlmCardTitleDirective,
+  HlmCardContentDirective,
+} from '@spartan-ng/helm/card';
+import { HlmButtonDirective } from '@spartan-ng/helm/button';
+import { HlmBadgeDirective } from '@spartan-ng/helm/badge';
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
+import { CREATE_CLASS } from '../../../utils/apiPaths';
+import { toast } from 'ngx-sonner';
+
+interface ClassType {
+  id?: number;
+  grade: string;
+  section: string;
+  room: number;
+  teacher?: string;
+  subjects?: string[];
+  weeklySchedule?: { [key: string]: string[] };
+}
+
+@Component({
+  selector: 'app-classes-wizard',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, HlmToasterComponent],
+  templateUrl: './classes-wizard.html',
+  styleUrls: ['./classes-wizard.css'],
+})
+export class ClassesWizard implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  private http = inject(HttpClient);
+
+  // Stepper state
+  currentStep = 1;
+  stepLabels = ['Class Info', 'Staff', 'Schedule', 'Review'];
+
+  // Mock lists (replace with real service calls)
+  teacherList = ['Ms. Ayesha', 'Mr. Hamid', 'Ms. Fatima', 'Mr. Ali'];
+  subjectsList = [
+    'Mathematics',
+    'English',
+    'Physics',
+    'Chemistry',
+    'Biology',
+    'History',
+    'Geography',
+  ];
+  daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+  // Main reactive form
+  form: FormGroup;
+
+  get step1(): FormGroup {
+    return this.form.get('step1') as FormGroup;
+  }
+  get step2(): FormGroup {
+    return this.form.get('step2') as FormGroup;
+  }
+  get step3(): FormGroup {
+    return this.form.get('step3') as FormGroup;
+  }
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      step1: this.fb.group({
+        grade: ['', [Validators.required]],
+        section: ['', [Validators.required]],
+        room: ['', [Validators.required, Validators.min(1)]],
+      }),
+      step2: this.fb.group({
+        classTeacher: ['', Validators.required],
+      }),
+      step3: this.fb.group({
+        subjects: [[], this.arrayMinLength(1)],
+        schedule: this.fb.group({
+          monday: [[]],
+          tuesday: [[]],
+          wednesday: [[]],
+          thursday: [[]],
+          friday: [[]],
+        }),
+      }),
+    });
+  }
+
+  ngOnInit() {
+    this.loadFromSessionStorage();
+    this.setupAutoSave();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Session Storage Auto-Save
+  setupAutoSave() {
+    this.form.valueChanges
+      .pipe(debounceTime(500), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.saveToSessionStorage();
+      });
+  }
+
+  saveToSessionStorage() {
+    const formData = {
+      formValue: this.form.value,
+      currentStep: this.currentStep,
+      timestamp: new Date().toISOString(),
+    };
+    sessionStorage.setItem('classWizardData', JSON.stringify(formData));
+  }
+
+  loadFromSessionStorage() {
+    const savedData = sessionStorage.getItem('classWizardData');
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData);
+        this.form.patchValue(data.formValue);
+        this.currentStep = data.currentStep || 1;
+      } catch (error) {
+        console.error('Error loading saved data:', error);
+      }
+    }
+  }
+
+  clearSessionStorage() {
+    sessionStorage.removeItem('classWizardData');
+  }
+
+  // Custom validator for array minimum length
+  arrayMinLength(min: number) {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
+      if (value && Array.isArray(value) && value.length >= min) {
+        return null;
+      }
+      return {
+        arrayMinLength: {
+          requiredLength: min,
+          actualLength: value ? value.length : 0,
+        },
+      };
+    };
+  }
+
+  // Helper methods for UI
+  getSelectedSubjects(): string[] {
+    return this.step3.get('subjects')!.value || [];
+  }
+
+  getSelectedSubjectsCount(): number {
+    return this.getSelectedSubjects().length;
+  }
+
+  isSubjectSelected(subject: string): boolean {
+    return this.getSelectedSubjects().includes(subject);
+  }
+
+  isScheduleSubjectSelected(day: string, subject: string): boolean {
+    const scheduleGroup = this.step3.get('schedule') as FormGroup;
+    const daySubjects = scheduleGroup.get(day)!.value || [];
+    return daySubjects.includes(subject);
+  }
+
+  getScheduleSubjects(day: string): string[] {
+    const scheduleGroup = this.step3.get('schedule') as FormGroup;
+    return scheduleGroup.get(day)!.value || [];
+  }
+
+  isDayEmpty(day: string): boolean {
+    return this.getScheduleSubjects(day).length === 0;
+  }
+
+  isScheduleComplete(): boolean {
+    return this.daysOfWeek.every((day) => !this.isDayEmpty(day));
+  }
+
+  clearAllSchedules() {
+    const scheduleGroup = this.step3.get('schedule') as FormGroup;
+    this.daysOfWeek.forEach((day) => {
+      scheduleGroup.get(day)!.setValue([]);
+    });
+  }
+
+  // Navigation
+  canGoNext(): boolean {
+    if (this.currentStep === 1) return this.step1.valid;
+    if (this.currentStep === 2) return this.step2.valid;
+    if (this.currentStep === 3)
+      return this.step3.valid && this.isScheduleComplete();
+    return false;
+  }
+
+  next() {
+    // mark controls touched to show validation errors
+    if (this.currentStep === 1) this.markGroupTouched(this.step1);
+    if (this.currentStep === 2) this.markGroupTouched(this.step2);
+    if (this.currentStep === 3) this.markGroupTouched(this.step3);
+
+    if (!this.canGoNext()) return;
+    if (this.currentStep < 4) {
+      this.currentStep++;
+      this.saveToSessionStorage();
+    }
+  }
+
+  back() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      this.saveToSessionStorage();
+    }
+  }
+
+  goTo(step: number) {
+    // allow jumping to a previous step or to the review when all steps valid
+    if (step < this.currentStep) {
+      this.currentStep = step;
+      this.saveToSessionStorage();
+      return;
+    }
+    // trying to jump forward — validate previous steps
+    if (step === 2 && this.step1.valid) {
+      this.currentStep = 2;
+      this.saveToSessionStorage();
+      return;
+    }
+    if (step === 3 && this.step1.valid && this.step2.valid) {
+      this.currentStep = 3;
+      this.saveToSessionStorage();
+      return;
+    }
+    if (
+      step === 4 &&
+      this.step1.valid &&
+      this.step2.valid &&
+      this.step3.valid &&
+      this.isScheduleComplete()
+    ) {
+      this.currentStep = 4;
+      this.saveToSessionStorage();
+      return;
+    }
+    // else do nothing — user must complete steps in order
+    this.markGroupTouched(this.step1);
+    this.markGroupTouched(this.step2);
+    this.markGroupTouched(this.step3);
+  }
+
+  submit() {
+    // final validation
+    this.markGroupTouched(this.step1);
+    this.markGroupTouched(this.step2);
+    this.markGroupTouched(this.step3);
+
+    if (
+      !this.step1.valid ||
+      !this.step2.valid ||
+      !this.step3.valid ||
+      !this.isScheduleComplete()
+    ) {
+      this.currentStep = 1;
+      return;
+    }
+
+    // build the ClassType object
+    const payload: ClassType = {
+      grade: this.step1.value.grade,
+      section: this.step1.value.section,
+      room: this.step1.value.room,
+      teacher: this.step2.value.classTeacher,
+      subjects: this.step3.value.subjects,
+      weeklySchedule: this.step3.value.schedule,
+    };
+
+    console.log(payload);
+    this.http
+      .post<ClassType>(`${environment.apiUrl}${CREATE_CLASS}`, payload)
+      .subscribe({
+        next: (data) => {
+          console.log('Updated data:', data);
+        },
+        error: (err) => {
+          const errArray = err.error.message;
+          errArray.forEach((element: string) => {
+            toast(element);
+          });
+          console.error('Error occurred:', err);
+        },
+      });
+
+    // Clear session storage and reset
+    // this.clearSessionStorage();
+    // this.reset();
+  }
+
+  reset() {
+    this.form.reset({
+      step1: { grade: '', section: '', room: '' },
+      step2: { classTeacher: '' },
+      step3: {
+        subjects: [],
+        schedule: {
+          monday: [],
+          tuesday: [],
+          wednesday: [],
+          thursday: [],
+          friday: [],
+        },
+      },
+    });
+    this.currentStep = 1;
+    this.clearSessionStorage();
+  }
+
+  // helper to mark all controls touched for a group
+  private markGroupTouched(group: AbstractControl) {
+    if (!group) return;
+    if ((group as FormGroup).controls) {
+      Object.values((group as FormGroup).controls).forEach((control) => {
+        control.markAsTouched();
+        if ((control as FormGroup).controls) this.markGroupTouched(control);
+      });
+    }
+  }
+
+  // Helpers for UI
+  controlHasError(control: AbstractControl | null, error: string) {
+    if (!control) return false;
+    return control.touched && control.hasError(error);
+  }
+
+  // Utility to toggle subject in subjects array
+  toggleSubject(subject: string) {
+    const arr: string[] = this.step3.get('subjects')!.value || [];
+    const idx = arr.indexOf(subject);
+    if (idx > -1) arr.splice(idx, 1);
+    else arr.push(subject);
+    this.step3.get('subjects')!.setValue(arr);
+    this.step3.get('subjects')!.markAsTouched();
+  }
+
+  // Manage schedule: add/remove subject for a day
+  toggleScheduleSubject(day: string, subject: string) {
+    const scheduleGroup = this.step3.get('schedule') as FormGroup;
+    const arr: string[] = scheduleGroup.get(day)!.value || [];
+    const idx = arr.indexOf(subject);
+    if (idx > -1) arr.splice(idx, 1);
+    else arr.push(subject);
+    scheduleGroup.get(day)!.setValue(arr);
+    scheduleGroup.get(day)!.markAsTouched();
+  }
+}

@@ -160,7 +160,7 @@
         },
         {
           "file": "angular.json",
-          "hash": "9519236321006241701"
+          "hash": "17984907775229993529"
         },
         {
           "file": "components.json",
@@ -1012,11 +1012,11 @@
         },
         {
           "file": "package-lock.json",
-          "hash": "18154916874779529521"
+          "hash": "6233956980725081056"
         },
         {
           "file": "package.json",
-          "hash": "8343097980570472478",
+          "hash": "1341833990176834399",
           "deps": [
             "npm:@angular/build",
             "npm:@angular/cli",
@@ -1042,6 +1042,7 @@
             "npm:@angular/compiler",
             "npm:@angular/core",
             "npm:@angular/forms",
+            "npm:@angular/material",
             "npm:@angular/platform-browser",
             "npm:@angular/platform-server",
             "npm:@angular/router",
@@ -1065,12 +1066,36 @@
           "hash": "3988961587069885523"
         },
         {
+          "file": "src/app/announcements/announcements.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/announcements/announcements.html",
+          "hash": "8710681342619702008"
+        },
+        {
+          "file": "src/app/announcements/announcements.spec.ts",
+          "hash": "728643744321653467"
+        },
+        {
+          "file": "src/app/announcements/announcements.ts",
+          "hash": "1610882189337349558"
+        },
+        {
+          "file": "src/app/app-service.spec.ts",
+          "hash": "4768794780580393254"
+        },
+        {
+          "file": "src/app/app-service.ts",
+          "hash": "15467584433609110918"
+        },
+        {
           "file": "src/app/app.config.server.ts",
           "hash": "8877246535068392678"
         },
         {
           "file": "src/app/app.config.ts",
-          "hash": "1896588399966035630"
+          "hash": "5822198339827842465"
         },
         {
           "file": "src/app/app.css",
@@ -1078,7 +1103,7 @@
         },
         {
           "file": "src/app/app.html",
-          "hash": "8494068910889483010"
+          "hash": "17385897758380840601"
         },
         {
           "file": "src/app/app.routes.server.ts",
@@ -1086,7 +1111,7 @@
         },
         {
           "file": "src/app/app.routes.ts",
-          "hash": "13769356513069324548"
+          "hash": "895049382319912690"
         },
         {
           "file": "src/app/app.spec.ts",
@@ -1102,7 +1127,7 @@
         },
         {
           "file": "src/app/auth-guard.ts",
-          "hash": "14680375437683952130"
+          "hash": "12292312300163724313"
         },
         {
           "file": "src/app/auth.spec.ts",
@@ -1110,7 +1135,23 @@
         },
         {
           "file": "src/app/auth.ts",
-          "hash": "8916083433844644347"
+          "hash": "8709435181885797574"
+        },
+        {
+          "file": "src/app/classes/classes-wizard/classes-wizard.css",
+          "hash": "6934656377017773661"
+        },
+        {
+          "file": "src/app/classes/classes-wizard/classes-wizard.html",
+          "hash": "15915596111413958581"
+        },
+        {
+          "file": "src/app/classes/classes-wizard/classes-wizard.spec.ts",
+          "hash": "9724060278139894233"
+        },
+        {
+          "file": "src/app/classes/classes-wizard/classes-wizard.ts",
+          "hash": "14496454059987547829"
         },
         {
           "file": "src/app/classes/classes.css",
@@ -1118,7 +1159,7 @@
         },
         {
           "file": "src/app/classes/classes.html",
-          "hash": "15600071680287832673"
+          "hash": "11661105408163114004"
         },
         {
           "file": "src/app/classes/classes.spec.ts",
@@ -1126,7 +1167,7 @@
         },
         {
           "file": "src/app/classes/classes.ts",
-          "hash": "12562329315175321976"
+          "hash": "4548858119232914379"
         },
         {
           "file": "src/app/dashboard/dashboard.css",
@@ -1134,7 +1175,7 @@
         },
         {
           "file": "src/app/dashboard/dashboard.html",
-          "hash": "6289448167366289805"
+          "hash": "13896950539368617804"
         },
         {
           "file": "src/app/dashboard/dashboard.spec.ts",
@@ -1142,7 +1183,39 @@
         },
         {
           "file": "src/app/dashboard/dashboard.ts",
-          "hash": "4786616156312169368"
+          "hash": "15483806009404904256"
+        },
+        {
+          "file": "src/app/exams/exams.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/exams/exams.html",
+          "hash": "591082281450035745"
+        },
+        {
+          "file": "src/app/exams/exams.spec.ts",
+          "hash": "1107028253272876752"
+        },
+        {
+          "file": "src/app/exams/exams.ts",
+          "hash": "18275509521473534496"
+        },
+        {
+          "file": "src/app/fees/fees.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/fees/fees.html",
+          "hash": "11411490693427918560"
+        },
+        {
+          "file": "src/app/fees/fees.spec.ts",
+          "hash": "9476664011298872038"
+        },
+        {
+          "file": "src/app/fees/fees.ts",
+          "hash": "12248462690747615797"
         },
         {
           "file": "src/app/layout/layout.css",
@@ -1150,7 +1223,7 @@
         },
         {
           "file": "src/app/layout/layout.html",
-          "hash": "7724583955988754251"
+          "hash": "9938234946222992499"
         },
         {
           "file": "src/app/layout/layout.spec.ts",
@@ -1158,7 +1231,7 @@
         },
         {
           "file": "src/app/layout/layout.ts",
-          "hash": "15516380444488885100"
+          "hash": "9995226529923085360"
         },
         {
           "file": "src/app/login/login.css",
@@ -1166,7 +1239,7 @@
         },
         {
           "file": "src/app/login/login.html",
-          "hash": "2944377853981780048"
+          "hash": "1780432827542404312"
         },
         {
           "file": "src/app/login/login.spec.ts",
@@ -1174,7 +1247,23 @@
         },
         {
           "file": "src/app/login/login.ts",
-          "hash": "14487089838519584161"
+          "hash": "1428342782436542581"
+        },
+        {
+          "file": "src/app/settings/settings.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/settings/settings.html",
+          "hash": "16751993793420219804"
+        },
+        {
+          "file": "src/app/settings/settings.spec.ts",
+          "hash": "11227062403824126401"
+        },
+        {
+          "file": "src/app/settings/settings.ts",
+          "hash": "13927923266914380408"
         },
         {
           "file": "src/app/sidebar/sidebar.css",
@@ -1182,7 +1271,7 @@
         },
         {
           "file": "src/app/sidebar/sidebar.html",
-          "hash": "16025567176114004611"
+          "hash": "3408274837304642314"
         },
         {
           "file": "src/app/sidebar/sidebar.spec.ts",
@@ -1198,7 +1287,7 @@
         },
         {
           "file": "src/app/students/students.html",
-          "hash": "5596544493861138567"
+          "hash": "14971680336272306041"
         },
         {
           "file": "src/app/students/students.spec.ts",
@@ -1206,15 +1295,47 @@
         },
         {
           "file": "src/app/students/students.ts",
-          "hash": "7679681003172723455"
+          "hash": "2891739765132172791"
         },
         {
-          "file": "src/app/topbar/topbar.css",
+          "file": "src/app/students/user-form/user-form.css",
           "hash": "3244421341483603138"
         },
         {
+          "file": "src/app/students/user-form/user-form.html",
+          "hash": "12872302885567905732"
+        },
+        {
+          "file": "src/app/students/user-form/user-form.spec.ts",
+          "hash": "6330505197190847111"
+        },
+        {
+          "file": "src/app/students/user-form/user-form.ts",
+          "hash": "2250987050946526736"
+        },
+        {
+          "file": "src/app/teachers/teachers.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/app/teachers/teachers.html",
+          "hash": "14942357113990875367"
+        },
+        {
+          "file": "src/app/teachers/teachers.spec.ts",
+          "hash": "16272290182541432732"
+        },
+        {
+          "file": "src/app/teachers/teachers.ts",
+          "hash": "10683592643188878699"
+        },
+        {
+          "file": "src/app/topbar/topbar.css",
+          "hash": "8156998065426721976"
+        },
+        {
           "file": "src/app/topbar/topbar.html",
-          "hash": "9386899151271781065"
+          "hash": "7356623947652575068"
         },
         {
           "file": "src/app/topbar/topbar.spec.ts",
@@ -1222,11 +1343,47 @@
         },
         {
           "file": "src/app/topbar/topbar.ts",
-          "hash": "741905880114784604"
+          "hash": "4124676608345678737"
+        },
+        {
+          "file": "src/custom-theme.scss",
+          "hash": "3511429224688688465"
+        },
+        {
+          "file": "src/data/announcements.json",
+          "hash": "15712311200073102928"
+        },
+        {
+          "file": "src/data/classes.json",
+          "hash": "2704516934634434351"
+        },
+        {
+          "file": "src/data/exams.json",
+          "hash": "7262011458879114652"
+        },
+        {
+          "file": "src/data/fees.json",
+          "hash": "3290962620419592260"
+        },
+        {
+          "file": "src/data/students.json",
+          "hash": "14732530933991811533"
+        },
+        {
+          "file": "src/data/teachers.json",
+          "hash": "17091685043634896925"
+        },
+        {
+          "file": "src/environments/environment.development.ts",
+          "hash": "17755364297881263045"
+        },
+        {
+          "file": "src/environments/environment.ts",
+          "hash": "1655714181481801424"
         },
         {
           "file": "src/index.html",
-          "hash": "16192730330651393215"
+          "hash": "6872680502099517784"
         },
         {
           "file": "src/main.server.ts",
@@ -1242,7 +1399,7 @@
         },
         {
           "file": "src/styles.css",
-          "hash": "4114413252452095468"
+          "hash": "6284358323494671597"
         },
         {
           "file": "src/utils/cookie.ts",

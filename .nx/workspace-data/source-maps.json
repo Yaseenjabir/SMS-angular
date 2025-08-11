@@ -108,6 +108,10 @@
       "angular.json",
       "nx-angular-json-plugin"
     ],
+    "targets.build.configurations.development.fileReplacements": [
+      "angular.json",
+      "nx-angular-json-plugin"
+    ],
     "targets.serve": [
       "angular.json",
       "nx-angular-json-plugin"

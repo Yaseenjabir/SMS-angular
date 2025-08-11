@@ -1,39 +1,31 @@
+// src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map, of, tap } from 'rxjs';
+import { environment } from '../environments/environment.development';
+import { PROFILE } from '../utils/apiPaths';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
-  public loggedIn = false;
-  public user: { name: string } | null = null;
+  private apiUrl = `${environment.apiUrl}${PROFILE}`;
+  public isAuthenticated = false;
 
-  constructor() {
-    if (typeof window !== 'undefined') {
-      this.loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      const userData = localStorage.getItem('user');
-      this.user = userData ? JSON.parse(userData) : null;
-    }
-  }
+  constructor(private http: HttpClient) {}
 
-  login(name: string): void {
-    this.loggedIn = true;
-    this.user = { name }; // Store user data
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('user', JSON.stringify(this.user));
-    }
-  }
-
-  logout(): void {
-    this.loggedIn = false;
-    this.user = null;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('isLoggedIn', 'false');
-      localStorage.removeItem('user');
-    }
-  }
-
-  isAuthenticated(): boolean {
-    return this.loggedIn;
+  checkAuth(): Observable<boolean> {
+    return this.http
+      .get<{ verified: boolean }>(this.apiUrl, { withCredentials: true })
+      .pipe(
+        map((res) => {
+          this.isAuthenticated = res.verified;
+          return this.isAuthenticated;
+        }),
+        catchError((err) => {
+          this.isAuthenticated = false;
+          return of(false);
+        })
+      );
   }
 }

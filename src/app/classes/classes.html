@@ -2,9 +2,20 @@
   <!-- header  -->
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-bold text-foreground">Classes</h1>
-    <button hlmBtn class="bg-primary hover:bg-primary-dark">
+    <hlm-dialog>
+      <button brnDialogTrigger hlmBtn class="bg-primary hover:bg-primary-dark">
+        ➕ Add Class
+      </button>
+      <hlm-dialog-content
+        class="w-full max-w-none md:w-[600px] max-h-[500px] overflow-y-scroll lg:w-[800px]"
+        *brnDialogContent="let ctx"
+      >
+        <app-classes-wizard />
+      </hlm-dialog-content>
+    </hlm-dialog>
+    <!-- <button hlmBtn class="bg-primary hover:bg-primary-dark">
       ➕ Add Class
-    </button>
+    </button> -->
   </div>
 
   <!-- Classes section goes here  -->
@@ -250,3 +261,4 @@
     </div>
   </div>
 </div>
+<!-- <app-classes-wizard /> -->

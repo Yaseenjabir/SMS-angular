@@ -3,10 +3,18 @@ import studentsData from '../../data/students.json';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgClass } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/helm/button';
+import { AppService } from '../app-service';
+import { StudentForm } from './student-form/student-form';
 
 @Component({
   selector: 'app-students',
-  imports: [FormsModule, NgClass, CommonModule, HlmButtonDirective],
+  imports: [
+    FormsModule,
+    NgClass,
+    CommonModule,
+    HlmButtonDirective,
+    StudentForm,
+  ],
   templateUrl: './students.html',
   styleUrl: './students.css',
 })
@@ -17,6 +25,16 @@ export class Students {
   isAddFormOpen = false;
   isEditFormOpen = false;
   editingStudent: any = null;
+
+  open() {
+    this.appService.open();
+  }
+
+  close() {
+    this.appService.close();
+  }
+
+  constructor(private readonly appService: AppService) {}
 
   // Data
   studentsData = studentsData;

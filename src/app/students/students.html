@@ -1,7 +1,7 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-bold text-foreground">Students</h1>
-    <button hlmBtn class="bg-primary hover:bg-primary-dark">
+    <button (click)="open()" hlmBtn class="bg-primary hover:bg-primary-dark">
       ➕ Add Student
     </button>
   </div>
@@ -89,3 +89,4 @@
   </div>
   }
 </div>
+<app-student-form />

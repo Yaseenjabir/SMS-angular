@@ -25,6 +25,7 @@ import {
   HlmTabsTriggerDirective,
   HlmTabsContentDirective,
 } from '@spartan-ng/helm/tabs';
+import { ClassesWizard } from './classes-wizard/classes-wizard';
 
 interface ClassType {
   id: number;
@@ -52,7 +53,7 @@ interface ClassType {
     HlmDialogComponent,
     HlmDialogContentComponent,
     HlmDialogHeaderComponent,
-
+    ClassesWizard,
     BrnDialogContentDirective,
     BrnDialogTriggerDirective,
     HlmTabsComponent,

@@ -7,7 +7,6 @@ import {
   HlmCardTitleDirective,
   HlmCardContentDirective,
 } from '@spartan-ng/helm/card';
-import { HlmBadgeDirective } from '@spartan-ng/helm/badge';
 import { HlmButtonDirective } from '@spartan-ng/helm/button';
 import { HlmInputDirective } from '@spartan-ng/helm/input';
 import { HlmLabelDirective } from '@spartan-ng/helm/label';
@@ -48,7 +47,6 @@ interface SystemSettings {
     HlmCardHeaderDirective,
     HlmCardTitleDirective,
     HlmCardContentDirective,
-    HlmBadgeDirective,
     HlmButtonDirective,
     HlmInputDirective,
     HlmLabelDirective,

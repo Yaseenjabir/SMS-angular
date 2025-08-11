@@ -1,0 +1,280 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-white py-8">
+  <div class="max-w-2xl mx-auto p-6">
+    <div
+      class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden"
+    >
+      <!-- Header -->
+      <div class="bg-blue-600 px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-medium text-white">Add New Student</h1>
+            <p class="text-blue-100 text-sm font-normal">
+              Fill in the student information below
+            </p>
+          </div>
+          <div
+            class="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-normal"
+          >
+            Student Form
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Content -->
+      <div class="p-6">
+        <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+          <div class="space-y-6">
+            <!-- Name Field -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Student Name <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white"
+                formControlName="name"
+                placeholder="Enter student's full name"
+                [class.border-red-300]="
+                  controlHasError('name', 'required') ||
+                  controlHasError('name', 'minlength')
+                "
+                [class.bg-red-50]="
+                  controlHasError('name', 'required') ||
+                  controlHasError('name', 'minlength')
+                "
+              />
+              <div
+                *ngIf="controlHasError('name', 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please enter the student's name
+              </div>
+              <div
+                *ngIf="controlHasError('name', 'minlength')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Name must be at least 2 characters long
+              </div>
+            </div>
+
+            <!-- Age Field -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Age <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                min="5"
+                max="20"
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white"
+                formControlName="age"
+                placeholder="Enter student's age"
+                [class.border-red-300]="
+                  controlHasError('age', 'required') ||
+                  controlHasError('age', 'min') ||
+                  controlHasError('age', 'max')
+                "
+                [class.bg-red-50]="
+                  controlHasError('age', 'required') ||
+                  controlHasError('age', 'min') ||
+                  controlHasError('age', 'max')
+                "
+              />
+              <div
+                *ngIf="controlHasError('age', 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please enter the student's age
+              </div>
+              <div
+                *ngIf="controlHasError('age', 'min')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Age must be at least 5 years
+              </div>
+              <div
+                *ngIf="controlHasError('age', 'max')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Age must not exceed 20 years
+              </div>
+            </div>
+
+            <!-- Roll Number Field -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Roll Number <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white"
+                formControlName="rollNo"
+                placeholder="Enter roll number (e.g., 2024001)"
+                [class.border-red-300]="
+                  controlHasError('rollNo', 'required') ||
+                  controlHasError('rollNo', 'pattern')
+                "
+                [class.bg-red-50]="
+                  controlHasError('rollNo', 'required') ||
+                  controlHasError('rollNo', 'pattern')
+                "
+              />
+              <div
+                *ngIf="controlHasError('rollNo', 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please enter the roll number
+              </div>
+              <div
+                *ngIf="controlHasError('rollNo', 'pattern')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Roll number must contain only letters and numbers
+              </div>
+            </div>
+
+            <!-- Grade Dropdown -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Grade <span class="text-red-500">*</span>
+              </label>
+              <div class="custom-select">
+                <select
+                  class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white appearance-none cursor-pointer"
+                  formControlName="grade"
+                  (change)="onGradeChange()"
+                  [class.border-red-300]="controlHasError('grade', 'required')"
+                  [class.bg-red-50]="controlHasError('grade', 'required')"
+                >
+                  <option value="">Select grade level</option>
+                  <option *ngFor="let g of grades" [value]="g">
+                    Grade {{ g }}
+                  </option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+                >
+                  <svg
+                    class="w-5 h-5 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                *ngIf="controlHasError('grade', 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please select a grade level
+              </div>
+            </div>
+
+            <!-- Section Dropdown (appears when grade is selected) -->
+            <div class="space-y-2" *ngIf="showSectionDropdown">
+              <label class="block text-sm font-medium text-slate-700">
+                Section <span class="text-red-500">*</span>
+              </label>
+              <div class="custom-select animate-fade-in">
+                <select
+                  class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white appearance-none cursor-pointer"
+                  formControlName="section"
+                  [class.border-red-300]="
+                    controlHasError('section', 'required')
+                  "
+                  [class.bg-red-50]="controlHasError('section', 'required')"
+                >
+                  <option value="">Select section</option>
+                  <option *ngFor="let s of sections" [value]="s">
+                    Section {{ s }}
+                  </option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+                >
+                  <svg
+                    class="w-5 h-5 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div
+                *ngIf="controlHasError('section', 'required')"
+                class="text-sm text-red-600 font-normal"
+              >
+                Please select a section
+              </div>
+            </div>
+
+            <!-- Selected Grade and Section Display -->
+            <div
+              *ngIf="getSelectedGradeSection()"
+              class="bg-blue-50 rounded-lg p-4 border border-blue-200 animate-fade-in"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-medium text-blue-800 mb-1">Selected Class</h4>
+                  <p class="text-blue-600 font-normal">
+                    {{ getSelectedGradeSection() }}
+                  </p>
+                </div>
+                <div
+                  class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-normal"
+                >
+                  ✓ Confirmed
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex justify-between mt-8 pt-6 border-t border-slate-200">
+            <button
+              type="button"
+              class="px-6 py-3 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200"
+              (click)="onReset()"
+            >
+              Reset Form
+            </button>
+            <button
+              type="submit"
+              class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="!studentForm.valid"
+            >
+              Add Student
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Form Preview (for development) -->
+    <div
+      class="mt-6 bg-white rounded-lg shadow-md border border-slate-200 p-4"
+      *ngIf="studentForm.valid"
+    >
+      <h3 class="text-lg font-medium text-slate-800 mb-3">Form Preview</h3>
+      <div class="bg-slate-50 rounded-lg p-4">
+        <pre class="text-sm text-slate-600 font-mono">{{
+          getFormValues() | json
+        }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
