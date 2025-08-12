@@ -5,10 +5,23 @@ import { CommonModule, NgClass } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/helm/button';
 import { AppService } from '../app-service';
 import { StudentForm } from './student-form/student-form';
-
+import {
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+  HlmDialogHeaderComponent,
+  HlmDialogFooterComponent,
+} from '@spartan-ng/helm/dialog';
+import {
+  BrnDialogContentDirective,
+  BrnDialogTriggerDirective,
+} from '@spartan-ng/brain/dialog';
 @Component({
   selector: 'app-students',
   imports: [
+    HlmDialogComponent,
+    HlmDialogContentComponent,
+    BrnDialogContentDirective,
+    BrnDialogTriggerDirective,
     FormsModule,
     NgClass,
     CommonModule,

@@ -7,12 +7,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
+import { CREATE_STUDENT } from '../../../utils/apiPaths';
+import { toast } from 'ngx-sonner';
+import { HlmToasterComponent } from '@spartan-ng/helm/sonner';
 
 interface Student {
   id?: number;
   name: string;
   age: number;
-  rollNo: string;
+  rollNo: number;
   grade: number;
   section: string;
 }
@@ -20,7 +25,7 @@ interface Student {
 @Component({
   selector: 'app-student-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HlmToasterComponent],
   templateUrl: './student-form.html',
   styleUrls: ['./student-form.css'],
 })
@@ -30,9 +35,13 @@ export class StudentForm implements OnInit {
 
   // Static data
   grades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  sections = ['Green', 'Blue', 'Red'];
+  sections = [
+    { name: 'Green', value: 'G' },
+    { name: 'Blue', value: 'B' },
+    { name: 'Red', value: 'R' },
+  ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private readonly http: HttpClient) {
     this.studentForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       age: ['', [Validators.required, Validators.min(5), Validators.max(20)]],
@@ -89,24 +98,28 @@ export class StudentForm implements OnInit {
 
   onSubmit() {
     if (this.studentForm.valid) {
-      const studentData: Student = this.studentForm.value;
+      let studentData: Student = this.studentForm.value;
+      studentData = {
+        ...studentData,
+        age: Number(studentData.age),
+        grade: Number(studentData.grade),
+        rollNo: Number(studentData.rollNo),
+      };
 
-      // TODO: Replace with actual API call
-      console.log('Student data to be submitted:', studentData);
-
-      // Show success message
-      alert(
-        `✅ Student "${
-          studentData.name
-        }" has been added successfully!\n\nClass: ${this.getSelectedGradeSection()}\nRoll No: ${
-          studentData.rollNo
-        }`
-      );
-
-      // Reset form after successful submission
-      this.onReset();
+      this.http
+        .post(`${environment.apiUrl}${CREATE_STUDENT}`, studentData)
+        .subscribe({
+          next: (data) => {
+            if (data) {
+              toast.success('Student added succesfully');
+              this.onReset();
+            }
+          },
+          error: (err) => {
+            toast.error(err.error.message);
+          },
+        });
     } else {
-      // Mark all fields as touched to show validation errors
       this.markFormGroupTouched();
     }
   }

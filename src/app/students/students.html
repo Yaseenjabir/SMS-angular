@@ -1,9 +1,17 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-bold text-foreground">Students</h1>
-    <button (click)="open()" hlmBtn class="bg-primary hover:bg-primary-dark">
-      ➕ Add Student
-    </button>
+    <hlm-dialog>
+      <button brnDialogTrigger hlmBtn class="bg-primary hover:bg-primary-dark">
+        ➕ Add Student
+      </button>
+      <hlm-dialog-content
+        class="w-full max-w-none md:w-[600px] max-h-[500px] overflow-y-scroll"
+        *brnDialogContent="let ctx"
+      >
+        <app-student-form />
+      </hlm-dialog-content>
+    </hlm-dialog>
   </div>
 
   <!-- Filter Section -->
@@ -89,4 +97,4 @@
   </div>
   }
 </div>
-<app-student-form />
+<!-- <app-student-form /> -->
