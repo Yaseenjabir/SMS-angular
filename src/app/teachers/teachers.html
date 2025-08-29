@@ -2,15 +2,18 @@
   <!-- Header -->
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-bold text-foreground">Teachers</h1>
-    <button
-      hlmBtn
-      class="bg-primary hover:bg-primary-dark"
-      (click)="isAddFormOpen = true"
-    >
-      ➕ Add Teacher
-    </button>
+    <hlm-dialog>
+      <button brnDialogTrigger hlmBtn class="bg-primary hover:bg-primary-dark">
+        ➕ Add Teacher
+      </button>
+      <hlm-dialog-content
+        class="w-full max-w-none md:w-[600px] max-h-[500px] overflow-y-scroll lg:w-[800px]"
+        *brnDialogContent="let ctx"
+      >
+        <app-teacher-form [teachersData]="somevar"></app-teacher-form>
+      </hlm-dialog-content>
+    </hlm-dialog>
   </div>
-  <!-- {{ printData() }} -->
   <!-- Search -->
   <div class="max-w-md">
     <input
@@ -30,12 +33,14 @@
       <!-- Card Header -->
       <div class="p-6 pb-3">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold">{{ teacher.name }}</h3>
-          <span
+          <h3 class="text-lg font-semibold">
+            {{ teacher.personalInfo.fullName }}
+          </h3>
+          <!-- <span
             class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800"
           >
             {{ teacher.status }}
-          </span>
+          </span> -->
         </div>
       </div>
 
@@ -45,9 +50,9 @@
           <div class="flex items-center space-x-2">
             <span class="text-2xl">📚</span>
             <div>
-              <p class="font-medium">{{ teacher.subject }}</p>
+              <p class="font-medium">{{ teacher.professionalInfo.subject }}</p>
               <p class="text-sm text-muted-foreground">
-                {{ teacher.department }}
+                {{ teacher.professionalInfo.department }}
               </p>
             </div>
           </div>
@@ -55,17 +60,21 @@
           <div class="flex items-center space-x-2">
             <span class="text-2xl">📞</span>
             <div>
-              <p class="font-medium text-sm">{{ teacher.phone }}</p>
-              <p class="text-sm text-muted-foreground">{{ teacher.email }}</p>
+              <p class="font-medium text-sm">
+                {{ teacher.personalInfo.phone }}
+              </p>
+              <!-- <p class="text-sm text-muted-foreground">{{ teacher.email }}</p> -->
             </div>
           </div>
 
           <div class="flex items-center space-x-2">
             <span class="text-2xl">🎓</span>
             <div>
-              <p class="font-medium text-sm">{{ teacher.qualification }}</p>
+              <p class="font-medium text-sm">
+                {{ teacher.professionalInfo.qualificationDegree }}
+              </p>
               <p class="text-sm text-muted-foreground">
-                {{ teacher.experience }}
+                {{ teacher.professionalInfo.experience }}
               </p>
             </div>
           </div>
@@ -76,10 +85,10 @@
             <span class="text-sm text-muted-foreground">Classes:</span>
             <div class="flex flex-wrap gap-1">
               <span
-                *ngFor="let cls of teacher.classes"
+                *ngFor="let cls of teacher.teachingClasses"
                 class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-secondary text-secondary-foreground"
               >
-                {{ cls }}
+                {{ cls.grade }}
               </span>
             </div>
           </div>
@@ -104,7 +113,8 @@
               <hlm-dialog-content *brnDialogContent="let ctx" class="max-w-2xl">
                 <hlm-dialog-header>
                   <h3 brnDialogTitle hlm>
-                    Teacher Profile - {{ selectedTeacher?.name }}
+                    Teacher Profile -
+                    {{ selectedTeacher?.personalInfo.fullName }}
                   </h3>
                 </hlm-dialog-header>
 
@@ -118,23 +128,27 @@
                       <div class="space-y-2">
                         <div>
                           <span class="text-muted-foreground">Full Name:</span>
-                          <p class="font-medium">{{ selectedTeacher.name }}</p>
+                          <p class="font-medium">
+                            {{ selectedTeacher.personalInfo.fullName }}
+                          </p>
                         </div>
                         <div>
                           <span class="text-muted-foreground">Phone:</span>
-                          <p class="font-medium">{{ selectedTeacher.phone }}</p>
+                          <p class="font-medium">
+                            {{ selectedTeacher.personalInfo.phone }}
+                          </p>
                         </div>
-                        <div>
+                        <!-- <div>
                           <span class="text-muted-foreground">Email:</span>
                           <p class="font-medium">{{ selectedTeacher.email }}</p>
-                        </div>
+                        </div> -->
                         <div>
-                          <span class="text-muted-foreground">Status:</span>
+                          <!-- <span class="text-muted-foreground">Status:</span>
                           <span
                             class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-800"
                           >
                             {{ selectedTeacher.status }}
-                          </span>
+                          </span> -->
                         </div>
                       </div>
                     </div>
@@ -147,13 +161,13 @@
                         <div>
                           <span class="text-muted-foreground">Subject:</span>
                           <p class="font-medium">
-                            {{ selectedTeacher.subject }}
+                            {{ selectedTeacher.professionalInfo.subject }}
                           </p>
                         </div>
                         <div>
                           <span class="text-muted-foreground">Department:</span>
                           <p class="font-medium">
-                            {{ selectedTeacher.department }}
+                            {{ selectedTeacher.professionalInfo.department }}
                           </p>
                         </div>
                         <div>
@@ -161,13 +175,16 @@
                             >Qualification:</span
                           >
                           <p class="font-medium">
-                            {{ selectedTeacher.qualification }}
+                            {{
+                              selectedTeacher.professionalInfo
+                                .qualificationDegree
+                            }}
                           </p>
                         </div>
                         <div>
                           <span class="text-muted-foreground">Experience:</span>
                           <p class="font-medium">
-                            {{ selectedTeacher.experience }}
+                            {{ selectedTeacher.professionalInfo.experience }}
                           </p>
                         </div>
                         <div>
@@ -175,7 +192,7 @@
                             >Joining Date:</span
                           >
                           <p class="font-medium">
-                            {{ selectedTeacher.joiningDate }}
+                            {{ selectedTeacher.professionalInfo.joiningDate }}
                           </p>
                         </div>
                       </div>
@@ -187,10 +204,10 @@
                     <h3 class="font-semibold text-lg">Teaching Classes</h3>
                     <div class="flex flex-wrap gap-2">
                       <span
-                        *ngFor="let cls of selectedTeacher.classes"
+                        *ngFor="let cls of selectedTeacher.teachingClasses"
                         class="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium bg-secondary text-secondary-foreground"
                       >
-                        Class {{ cls }}
+                        Class {{ cls.grade }}
                       </span>
                     </div>
                   </div>

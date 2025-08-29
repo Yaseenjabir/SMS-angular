@@ -11,6 +11,17 @@ import {
 import { HlmBadgeDirective } from '@spartan-ng/helm/badge';
 import { HlmButtonDirective } from '@spartan-ng/helm/button';
 import { HlmInputDirective } from '@spartan-ng/helm/input';
+import { ExamForm } from './exam-form/exam-form';
+import {
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+  HlmDialogHeaderComponent,
+  HlmDialogFooterComponent,
+} from '@spartan-ng/helm/dialog';
+import {
+  BrnDialogContentDirective,
+  BrnDialogTriggerDirective,
+} from '@spartan-ng/brain/dialog';
 
 interface ExamType {
   id: number;
@@ -30,6 +41,7 @@ interface ExamType {
   selector: 'app-exams',
   standalone: true,
   imports: [
+    ExamForm,
     CommonModule,
     FormsModule,
     HlmCardDirective,
@@ -39,6 +51,12 @@ interface ExamType {
     HlmBadgeDirective,
     HlmButtonDirective,
     HlmInputDirective,
+    HlmDialogComponent,
+    HlmDialogContentComponent,
+    HlmDialogHeaderComponent,
+    HlmDialogFooterComponent,
+    BrnDialogContentDirective,
+    BrnDialogTriggerDirective,
   ],
   templateUrl: './exams.html',
   styleUrl: './exams.css',

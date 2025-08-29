@@ -2,9 +2,17 @@
   <!-- Header -->
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-bold text-foreground">Exams</h1>
-    <button hlmBtn class="bg-primary hover:bg-primary-dark">
-      ➕ Schedule Exam
-    </button>
+    <hlm-dialog>
+      <button brnDialogTrigger hlmBtn class="bg-primary hover:bg-primary-dark">
+        ➕ Schedule Exams
+      </button>
+      <hlm-dialog-content
+        class="w-full max-w-none md:w-[600px] max-h-[450px] overflow-y-scroll lg:w-[800px]"
+        *brnDialogContent="let ctx"
+      >
+        <app-exam-form></app-exam-form>
+      </hlm-dialog-content>
+    </hlm-dialog>
   </div>
 
   <!-- Filters -->

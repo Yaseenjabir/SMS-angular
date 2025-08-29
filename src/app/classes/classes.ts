@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import classesData from '../../data/classes.json';
 import { CommonModule } from '@angular/common';
 import {
@@ -26,17 +26,20 @@ import {
   HlmTabsContentDirective,
 } from '@spartan-ng/helm/tabs';
 import { ClassesWizard } from './classes-wizard/classes-wizard';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.development';
+import { GET_ALL_CLASSES } from '../../utils/apiPaths';
 
 interface ClassType {
-  id: number;
+  id: string;
   name: string;
-  grade: string;
+  grade: number;
   section: string;
-  classTeacher: string;
+  teacher: string;
   totalStudents: number;
   subjects: string[];
   room: string;
-  schedule: { [key: string]: string[] };
+  weeklySchedule: { [key: string]: string[] };
 }
 
 @Component({
@@ -65,11 +68,92 @@ interface ClassType {
   templateUrl: './classes.html',
   styleUrl: './classes.css',
 })
-export class Classes {
+export class Classes implements OnInit {
+  classesData: ClassType[] | null = null;
   selectedClass: ClassType | null = null;
-  setSelectedClass(classIs: any) {
-    this.selectedClass = classIs;
-  }
-  classesData: ClassType[] = classesData;
   daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+  constructor(private readonly http: HttpClient) {}
+
+  ngOnInit(): void {
+    // API call on page load
+    this.http.get(`${environment.apiUrl}${GET_ALL_CLASSES}`).subscribe({
+      next: (response: any) => {
+        console.log('API Response:', response);
+        console.log('Custom data:', classesData);
+        this.classesData = response.data;
+      },
+      error: (err) => {
+        console.error('Error fetching classes:', err);
+      },
+    });
+
+    const openingTime = 8;
+    const closingTime = 2;
+    const breakMinutes = 30;
+    const totalLessons = 8;
+
+    const duration = this.calculateLessonDuration(
+      `${openingTime}AM`,
+      `${closingTime}PM`,
+      breakMinutes,
+      totalLessons
+    );
+  }
+
+  setSelectedClass(classIs: ClassType) {
+    this.selectedClass = classIs;
+    console.log(this.selectedClass);
+  }
+
+  calculateLessonDuration(
+    openingTime: string,
+    closingTime: string,
+    breakMinutes: number,
+    totalLessons: number
+  ): number {
+    function timeToMinutes(timeStr: string) {
+      const isAM = timeStr.toUpperCase().includes('AM');
+      const isPM = timeStr.toUpperCase().includes('PM');
+      let [hour, minute] = timeStr
+        .replace(/AM|PM/i, '')
+        .trim()
+        .split(':')
+        .map(Number);
+
+      if (!minute) minute = 0;
+      if (isPM && hour !== 12) hour += 12;
+      if (isAM && hour === 12) hour = 0;
+
+      return hour * 60 + minute;
+    }
+
+    const startMinutes = timeToMinutes(openingTime);
+    const endMinutes = timeToMinutes(closingTime);
+
+    const totalMinutes = endMinutes - startMinutes;
+    const teachingMinutes = totalMinutes - breakMinutes;
+    const lessonDuration = teachingMinutes / totalLessons;
+
+    // Round to nearest 5 minutes
+    return Math.round(lessonDuration / 5) * 5;
+  }
+
+  sections: Record<'R' | 'G' | 'B', string> = {
+    R: 'Red',
+    G: 'Green',
+    B: 'Blue',
+  };
+
+  getSectionName(section: string) {
+    return this.sections[section as 'R' | 'G' | 'B'];
+  }
+
+  onClassCreated(newClass: ClassType) {
+    if (this.classesData) {
+      this.classesData = [...this.classesData, newClass]; // Create new array for change detection
+    } else {
+      this.classesData = [newClass];
+    }
+  }
 }

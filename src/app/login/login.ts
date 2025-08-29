@@ -62,6 +62,7 @@ export class Login {
           toast(response.message);
         },
         (error) => {
+          console.log(error);
           if (error.status === 401) {
             toast('Invalid Credentials');
           } else {

@@ -1,5 +1,12 @@
 // File: classes-wizard.ts
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -9,15 +16,6 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { HlmToasterComponent } from '@spartan-ng/helm/sonner';
-
-import {
-  HlmCardDirective,
-  HlmCardHeaderDirective,
-  HlmCardTitleDirective,
-  HlmCardContentDirective,
-} from '@spartan-ng/helm/card';
-import { HlmButtonDirective } from '@spartan-ng/helm/button';
-import { HlmBadgeDirective } from '@spartan-ng/helm/badge';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -43,6 +41,31 @@ interface ClassType {
   styleUrls: ['./classes-wizard.css'],
 })
 export class ClassesWizard implements OnInit, OnDestroy {
+  @Output() classCreated = new EventEmitter<any>(); // You can replace 'any' with ClassType if shared
+
+  newClass = {
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    grade: 8,
+    room: 11,
+    section: 'R',
+    students: 0,
+    subjects: ['Geography', 'Chemistry', 'History'],
+    teacher: 'Mr. Ali',
+    weeklySchedule: {
+      monday: ['History'],
+      tuesday: ['History'],
+      wednesday: ['Chemistry'],
+      thursday: ['Chemistry'],
+      friday: ['Chemistry'],
+      saturday: ['Chemistry'],
+    },
+  };
+
+  saveClass(newClass: any) {
+    // Emit new class to parent
+    this.classCreated.emit(newClass);
+  }
   private destroy$ = new Subject<void>();
   private http = inject(HttpClient);
 
@@ -297,7 +320,6 @@ export class ClassesWizard implements OnInit, OnDestroy {
       weeklySchedule: this.step3.value.schedule,
     };
 
-    console.log(payload);
     this.http
       .post<{ data: ClassType; message: string }>(
         `${environment.apiUrl}${CREATE_CLASS}`,
@@ -306,6 +328,7 @@ export class ClassesWizard implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.data) {
+            this.saveClass(response.data);
             toast.success('Class added successfully');
             this.clearSessionStorage();
             this.reset();
