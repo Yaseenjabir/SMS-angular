@@ -2,13 +2,38 @@
   <!-- Header -->
   <div class="flex items-center justify-between">
     <h1 class="text-3xl font-bold text-foreground">Announcements</h1>
-    <button hlmBtn class="bg-primary hover:bg-primary-dark">
-      📢 New Announcement
-    </button>
+    <div class="flex gap-2">
+      <button
+        hlmBtn
+        variant="outline"
+        (click)="refreshAnnouncements()"
+        [disabled]="isLoading"
+      >
+        🔄 {{ isLoading ? "Loading..." : "Refresh" }}
+      </button>
+      <hlm-dialog>
+        <button
+          brnDialogTrigger
+          hlmBtn
+          class="bg-primary hover:bg-primary-dark"
+        >
+          📢 New Announcement
+        </button>
+        <hlm-dialog-content
+          class="w-full max-w-none md:w-[600px] max-h-[450px] overflow-y-scroll lg:w-[800px]"
+          *brnDialogContent="let ctx"
+        >
+          <app-announcement-form></app-announcement-form>
+        </hlm-dialog-content>
+      </hlm-dialog>
+    </div>
   </div>
 
   <!-- Summary Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+  <div
+    class="grid grid-cols-1 md:grid-cols-4 gap-6"
+    *ngIf="!isLoading && !error"
+  >
     <div hlmCard>
       <div hlmCardHeader class="pb-2">
         <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
@@ -63,7 +88,7 @@
   </div>
 
   <!-- Filters -->
-  <div class="flex flex-col sm:flex-row gap-4">
+  <div class="flex flex-col sm:flex-row gap-4" *ngIf="!isLoading && !error">
     <div class="flex-1">
       <input
         hlmInput
@@ -83,8 +108,32 @@
     </select>
   </div>
 
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-12">
+    <div
+      class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"
+    ></div>
+    <p class="text-muted-foreground">Loading announcements...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="text-center py-12">
+    <div class="text-6xl mb-4">⚠️</div>
+    <h3 class="text-xl font-semibold mb-2 text-destructive">
+      Error Loading Announcements
+    </h3>
+    <p class="text-muted-foreground mb-4">{{ error }}</p>
+    <button
+      hlmBtn
+      (click)="retryLoading()"
+      class="bg-primary hover:bg-primary-dark"
+    >
+      🔄 Retry
+    </button>
+  </div>
+
   <!-- Announcements List -->
-  <div class="space-y-4">
+  <div class="space-y-4" *ngIf="!isLoading && !error">
     <div
       *ngFor="let announcement of sortedAnnouncements"
       hlmCard
@@ -264,7 +313,10 @@
   </div>
 
   <!-- No results message -->
-  <div *ngIf="filteredAnnouncements.length === 0" class="text-center py-12">
+  <div
+    *ngIf="filteredAnnouncements.length === 0 && !isLoading && !error"
+    class="text-center py-12"
+  >
     <div class="text-6xl mb-4">📢</div>
     <h3 class="text-xl font-semibold mb-2">No announcements found</h3>
     <p class="text-muted-foreground">
@@ -272,3 +324,4 @@
     </p>
   </div>
 </div>
+<hlm-toaster />

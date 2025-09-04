@@ -2,11 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
+import { CREATE_EXAM } from '../../../utils/apiPaths';
+import { toast } from 'ngx-sonner';
+// import { HlmToaster } from '@spartan-ng/helm/sonner';
+import { HlmToasterComponent } from '@spartan-ng/helm/sonner';
 
 @Component({
   selector: 'app-exam-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HlmToasterComponent],
   templateUrl: './exam-form.html',
   styles: [],
 })
@@ -17,7 +23,7 @@ export class ExamForm implements OnInit {
   selectedFile: File | null = null;
   imagePreview: string | null = null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private readonly http: HttpClient) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -201,7 +207,6 @@ export class ExamForm implements OnInit {
       const formData = new FormData();
 
       // Add all form fields to FormData
-      formData.append('id', this.generateUniqueId());
       formData.append('name', this.examForm.get('name')?.value);
       formData.append(
         'description',
@@ -234,20 +239,34 @@ export class ExamForm implements OnInit {
         );
       }
 
-      console.log('Form data content : ', formData);
-      console.log('FormData contents:');
+      // console.log('Form data content : ', formData);
+      // console.log('FormData contents:');
       formData.forEach((value, key) => {
         console.log(key, value);
       });
 
-      // Simulate API call
-      setTimeout(() => {
-        alert('Exam created successfully with image uploaded!');
-        this.isSubmitting = false;
-        this.examForm.reset();
-        this.selectedFile = null;
-        this.imagePreview = null;
-      }, 2000);
+      this.http
+        .post(`${environment.apiUrl}${CREATE_EXAM}`, formData)
+        .subscribe({
+          next: (res) => {
+            if (res) {
+              toast.success('Exam has been added succesfully');
+            }
+          },
+          error: (ex) => {
+            if (ex.message) {
+              toast.error(ex.message);
+            } else {
+              toast.error('Internal Server Error');
+            }
+          },
+          complete: () => {
+            this.isSubmitting = false;
+            this.examForm.reset();
+            this.selectedFile = null;
+            this.imagePreview = null;
+          },
+        });
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.examForm.controls).forEach((key) => {
@@ -258,11 +277,5 @@ export class ExamForm implements OnInit {
         this.examForm.get('date_sheet_image')?.markAsTouched();
       }
     }
-  }
-
-  private generateUniqueId(): string {
-    return (
-      'exam_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9)
-    );
   }
 }

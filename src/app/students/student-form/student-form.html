@@ -20,8 +20,18 @@
         </div>
       </div>
 
+      <!-- Loading State -->
+      <div *ngIf="isLoadingDropdowns" class="p-6 text-center">
+        <div class="flex items-center justify-center space-x-2">
+          <div
+            class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+          ></div>
+          <span class="text-slate-600">Loading grade and section data...</span>
+        </div>
+      </div>
+
       <!-- Form Content -->
-      <div class="p-6">
+      <div class="p-6" *ngIf="!isLoadingDropdowns">
         <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
           <div class="space-y-6">
             <!-- Name Field -->
@@ -133,22 +143,25 @@
               </div>
             </div>
 
-            <!-- Grade Dropdown -->
+            <!-- Class Dropdown -->
             <div class="space-y-2">
               <label class="block text-sm font-medium text-slate-700">
-                Grade <span class="text-red-500">*</span>
+                Class <span class="text-red-500">*</span>
               </label>
-              <div class="custom-select">
+              <div class="custom-select relative">
                 <select
                   class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white appearance-none cursor-pointer"
-                  formControlName="grade"
-                  (change)="onGradeChange()"
-                  [class.border-red-300]="controlHasError('grade', 'required')"
-                  [class.bg-red-50]="controlHasError('grade', 'required')"
+                  formControlName="class"
+                  [class.border-red-300]="controlHasError('class', 'required')"
+                  [class.bg-red-50]="controlHasError('class', 'required')"
                 >
-                  <option value="">Select grade level</option>
-                  <option *ngFor="let g of grades" [value]="g">
-                    Grade {{ g }}
+                  <option value="">Select a class</option>
+                  <option
+                    *ngFor="let classItem of gradeSections"
+                    [value]="classItem._id"
+                  >
+                    Grade {{ classItem.grade }} - Section
+                    {{ classItem.section }}
                   </option>
                 </select>
                 <div
@@ -170,68 +183,130 @@
                 </div>
               </div>
               <div
-                *ngIf="controlHasError('grade', 'required')"
+                *ngIf="controlHasError('class', 'required')"
                 class="text-sm text-red-600 font-normal"
               >
-                Please select a grade level
+                Please select a class
+              </div>
+
+              <!-- Show total classes available -->
+              <div class="text-xs text-slate-500">
+                {{ gradeSections.length }} class(es) available
               </div>
             </div>
-
-            <!-- Section Dropdown (appears when grade is selected) -->
-            <div class="space-y-2" *ngIf="showSectionDropdown">
+            <!-- Date of Birth -->
+            <div class="space-y-2">
               <label class="block text-sm font-medium text-slate-700">
-                Section <span class="text-red-500">*</span>
+                Date of Birth <span class="text-red-500">*</span>
               </label>
-              <div class="custom-select animate-fade-in">
-                <select
-                  class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 hover:bg-white appearance-none cursor-pointer"
-                  formControlName="section"
-                  [class.border-red-300]="
-                    controlHasError('section', 'required')
-                  "
-                  [class.bg-red-50]="controlHasError('section', 'required')"
-                >
-                  <option value="">Select section</option>
-                  <option *ngFor="let s of sections" [value]="s.value">
-                    Section {{ s.name }}
-                  </option>
-                </select>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
-                >
-                  <svg
-                    class="w-5 h-5 text-slate-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </div>
-              </div>
+              <input
+                type="date"
+                class="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                formControlName="dob"
+                [class.border-red-300]="controlHasError('dob', 'required')"
+              />
               <div
-                *ngIf="controlHasError('section', 'required')"
-                class="text-sm text-red-600 font-normal"
+                *ngIf="controlHasError('dob', 'required')"
+                class="text-sm text-red-600"
               >
-                Please select a section
+                Please select date of birth
               </div>
             </div>
 
-            <!-- Selected Grade and Section Display -->
+            <!-- Gender -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Gender <span class="text-red-500">*</span>
+              </label>
+              <select
+                class="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                formControlName="gender"
+                [class.border-red-300]="controlHasError('gender', 'required')"
+              >
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              <div
+                *ngIf="controlHasError('gender', 'required')"
+                class="text-sm text-red-600"
+              >
+                Please select gender
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Address <span class="text-red-500">*</span>
+              </label>
+              <textarea
+                rows="2"
+                class="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                formControlName="address"
+                placeholder="Enter address"
+                [class.border-red-300]="controlHasError('address', 'required')"
+              ></textarea>
+              <div
+                *ngIf="controlHasError('address', 'required')"
+                class="text-sm text-red-600"
+              >
+                Please enter address
+              </div>
+            </div>
+
+            <!-- Admission Date -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-700">
+                Admission Date <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                class="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+                formControlName="admissionDate"
+                [class.border-red-300]="
+                  controlHasError('admissionDate', 'required')
+                "
+              />
+              <div
+                *ngIf="controlHasError('admissionDate', 'required')"
+                class="text-sm text-red-600"
+              >
+                Please select admission date
+              </div>
+            </div>
+
+            <!-- Selected Class Display -->
             <div
-              *ngIf="getSelectedGradeSection()"
+              *ngIf="getSelectedClass()"
               class="bg-blue-50 rounded-lg p-4 border border-blue-200 animate-fade-in"
             >
               <div class="flex items-center justify-between">
                 <div>
                   <h4 class="font-medium text-blue-800 mb-1">Selected Class</h4>
                   <p class="text-blue-600 font-normal">
-                    {{ getSelectedGradeSection() }}
+                    {{ getSelectedClass() }}
+                  </p>
+                </div>
+                <div
+                  class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-normal"
+                >
+                  ✓ Confirmed
+                </div>
+              </div>
+            </div>
+
+            <!-- Selected Class Display -->
+            <div
+              *ngIf="getSelectedClass()"
+              class="bg-blue-50 rounded-lg p-4 border border-blue-200 animate-fade-in"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-medium text-blue-800 mb-1">Selected Class</h4>
+                  <p class="text-blue-600 font-normal">
+                    {{ getSelectedClass() }}
                   </p>
                 </div>
                 <div
@@ -267,7 +342,7 @@
     <!-- Form Preview (for development) -->
     <div
       class="mt-6 bg-white rounded-lg shadow-md border border-slate-200 p-4"
-      *ngIf="studentForm.valid"
+      *ngIf="studentForm.valid && !isLoadingDropdowns"
     >
       <h3 class="text-lg font-medium text-slate-800 mb-3">Form Preview</h3>
       <div class="bg-slate-50 rounded-lg p-4">

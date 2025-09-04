@@ -1,4 +1,3 @@
-// File: student-form.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,7 +8,7 @@ import {
 } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
-import { CREATE_STUDENT } from '../../../utils/apiPaths';
+import { CREATE_STUDENT, GET_ALL_DROPDOWNS } from '../../../utils/apiPaths';
 import { toast } from 'ngx-sonner';
 import { HlmToasterComponent } from '@spartan-ng/helm/sonner';
 
@@ -20,6 +19,18 @@ interface Student {
   rollNo: number;
   grade: number;
   section: string;
+  dob: string;
+  gender: string;
+  address: string;
+  admissionDate: string;
+  class: string;
+}
+
+interface GradeSection {
+  _id: string;
+  grade: number;
+  section: string;
+  displayText?: string;
 }
 
 @Component({
@@ -31,62 +42,72 @@ interface Student {
 })
 export class StudentForm implements OnInit {
   studentForm: FormGroup;
-  showSectionDropdown = false;
-
-  // Static data
-  grades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  sections = [
-    { name: 'Green', value: 'G' },
-    { name: 'Blue', value: 'B' },
-    { name: 'Red', value: 'R' },
-  ];
+  gradeSections: GradeSection[] = [];
+  isLoadingDropdowns = false;
 
   constructor(private fb: FormBuilder, private readonly http: HttpClient) {
     this.studentForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       age: ['', [Validators.required, Validators.min(5), Validators.max(20)]],
-      rollNo: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]],
-      grade: ['', Validators.required],
-      section: ['', Validators.required],
+      rollNo: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      dob: ['', Validators.required],
+      gender: ['', Validators.required],
+      address: ['', [Validators.required, Validators.minLength(5)]],
+      admissionDate: ['', Validators.required],
+      class: ['', Validators.required],
     });
   }
 
   ngOnInit() {
-    // Watch for grade changes to show/hide section dropdown
-    this.studentForm.get('grade')?.valueChanges.subscribe((value) => {
-      this.showSectionDropdown = !!value;
-      if (!value) {
-        // Reset section when grade is cleared
-        this.studentForm.get('section')?.setValue('');
+    this.getAllDropDowns();
+  }
+
+  getAllDropDowns() {
+    this.isLoadingDropdowns = true;
+    this.http
+      .get<GradeSection[]>(`${environment.apiUrl}${GET_ALL_DROPDOWNS}`)
+      .subscribe({
+        next: (res) => {
+          this.gradeSections = res.map((item) => ({
+            ...item,
+            displayText: `Grade ${item.grade} - Section ${item.section}`,
+          }));
+          this.isLoadingDropdowns = false;
+        },
+        error: (ex) => {
+          console.error(ex);
+          this.isLoadingDropdowns = false;
+          toast.error('Failed to load grade and section data');
+        },
+      });
+  }
+
+  getSelectedClass(): string {
+    const selectedClassId = this.studentForm.get('class')?.value;
+    if (selectedClassId) {
+      const selectedClass = this.gradeSections.find(
+        (item) => item._id === selectedClassId
+      );
+      if (selectedClass) {
+        return `Grade ${selectedClass.grade}, Section ${selectedClass.section}`;
       }
-    });
-  }
-
-  onGradeChange() {
-    // Additional logic when grade changes if needed
-    const gradeValue = this.studentForm.get('grade')?.value;
-    if (gradeValue) {
-      this.showSectionDropdown = true;
-      // Reset section selection when grade changes
-      this.studentForm.get('section')?.setValue('');
-    } else {
-      this.showSectionDropdown = false;
-    }
-  }
-
-  getSelectedGradeSection(): string {
-    const grade = this.studentForm.get('grade')?.value;
-    const section = this.studentForm.get('section')?.value;
-
-    if (grade && section) {
-      return `Grade ${grade}, Section ${section}`;
     }
     return '';
   }
 
-  getFormValues(): Student | null {
+  getFormValues(): any {
     if (this.studentForm.valid) {
-      return this.studentForm.value as Student;
+      const formValue = this.studentForm.value;
+      const selectedClass = this.gradeSections.find(
+        (item) => item._id === formValue.class
+      );
+
+      return {
+        ...formValue,
+        grade: selectedClass?.grade,
+        section: selectedClass?.section,
+        class: formValue.class,
+      };
     }
     return null;
   }
@@ -98,12 +119,22 @@ export class StudentForm implements OnInit {
 
   onSubmit() {
     if (this.studentForm.valid) {
-      let studentData: Student = this.studentForm.value;
-      studentData = {
-        ...studentData,
-        age: Number(studentData.age),
-        grade: Number(studentData.grade),
-        rollNo: Number(studentData.rollNo),
+      const formValue = this.studentForm.value;
+      const selectedClass = this.gradeSections.find(
+        (item) => item._id === formValue.class
+      );
+
+      let studentData: Student = {
+        name: formValue.name,
+        age: Number(formValue.age),
+        rollNo: Number(formValue.rollNo),
+        dob: formValue.dob,
+        gender: formValue.gender,
+        address: formValue.address,
+        admissionDate: formValue.admissionDate,
+        grade: selectedClass?.grade || 0,
+        section: selectedClass?.section || '',
+        class: formValue.class,
       };
 
       this.http
@@ -111,12 +142,19 @@ export class StudentForm implements OnInit {
         .subscribe({
           next: (data) => {
             if (data) {
-              toast.success('Student added succesfully');
+              toast.success('Student added successfully');
               this.onReset();
             }
           },
           error: (err) => {
-            toast.error(err.error.message);
+            if (Array.isArray(err.error.message)) {
+              err.error.message.forEach((element: string) => {
+                toast.error(element);
+              });
+            } else {
+              toast.error(err.error.message);
+            }
+            console.log('Err is : ', err);
           },
         });
     } else {
@@ -126,7 +164,6 @@ export class StudentForm implements OnInit {
 
   onReset() {
     this.studentForm.reset();
-    this.showSectionDropdown = false;
   }
 
   private markFormGroupTouched() {

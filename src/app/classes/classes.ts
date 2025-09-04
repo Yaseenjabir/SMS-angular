@@ -31,7 +31,7 @@ import { environment } from '../../environments/environment.development';
 import { GET_ALL_CLASSES } from '../../utils/apiPaths';
 
 interface ClassType {
-  id: string;
+  _id: string;
   name: string;
   grade: number;
   section: string;
@@ -75,30 +75,18 @@ export class Classes implements OnInit {
 
   constructor(private readonly http: HttpClient) {}
 
+  classesDropdown: any;
+
   ngOnInit(): void {
     // API call on page load
     this.http.get(`${environment.apiUrl}${GET_ALL_CLASSES}`).subscribe({
       next: (response: any) => {
-        console.log('API Response:', response);
-        console.log('Custom data:', classesData);
         this.classesData = response.data;
       },
       error: (err) => {
         console.error('Error fetching classes:', err);
       },
     });
-
-    const openingTime = 8;
-    const closingTime = 2;
-    const breakMinutes = 30;
-    const totalLessons = 8;
-
-    const duration = this.calculateLessonDuration(
-      `${openingTime}AM`,
-      `${closingTime}PM`,
-      breakMinutes,
-      totalLessons
-    );
   }
 
   setSelectedClass(classIs: ClassType) {

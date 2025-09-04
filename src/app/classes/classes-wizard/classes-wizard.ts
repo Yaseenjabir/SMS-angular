@@ -106,7 +106,7 @@ export class ClassesWizard implements OnInit, OnDestroy {
     return this.form.get('step3') as FormGroup;
   }
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, http: HttpClient) {
     this.form = this.fb.group({
       step1: this.fb.group({
         grade: ['', [Validators.required]],

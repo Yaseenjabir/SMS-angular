@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import announcementsData from '../../data/announcements.json';
 import {
   HlmCardDirective,
   HlmCardHeaderDirective,
@@ -21,9 +20,28 @@ import {
   BrnDialogContentDirective,
   BrnDialogTriggerDirective,
 } from '@spartan-ng/brain/dialog';
+import { AnnouncementForm } from './announcement-form/announcement-form';
+import { HlmToasterComponent } from '@spartan-ng/helm/sonner';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.development';
+import { GET_ALL_ANNOUNCEMENT } from '../../utils/apiPaths';
 
+// Updated interface to match API response
+interface ApiAnnouncementResponse {
+  _id: string;
+  title: string;
+  description: string;
+  to_whom: string;
+  priority: string;
+  is_active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+// Keep the existing interface for internal use
 interface AnnouncementType {
-  id: number;
+  id: string;
   title: string;
   content: string;
   date: string;
@@ -53,15 +71,87 @@ interface AnnouncementType {
     HlmDialogTitleDirective,
     BrnDialogContentDirective,
     BrnDialogTriggerDirective,
+    AnnouncementForm,
+    HlmToasterComponent,
   ],
   templateUrl: './announcements.html',
   styleUrl: './announcements.css',
 })
-export class Announcements {
+export class Announcements implements OnInit {
+  constructor(private readonly http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.loadAnnouncements();
+  }
+
   searchTerm = '';
   priorityFilter = 'all';
   selectedAnnouncement: AnnouncementType | null = null;
-  announcementsData: AnnouncementType[] = announcementsData;
+  announcementsData: AnnouncementType[] = [];
+  isLoading = false;
+  error: string | null = null;
+
+  private loadAnnouncements(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    this.http
+      .get<ApiAnnouncementResponse[]>(
+        `${environment.apiUrl}${GET_ALL_ANNOUNCEMENT}`
+      )
+      .subscribe({
+        next: (apiResponse) => {
+          console.log('API Response:', apiResponse);
+          this.announcementsData = this.transformApiData(apiResponse);
+          this.isLoading = false;
+        },
+        error: (ex) => {
+          console.error('Error loading announcements:', ex);
+          this.error = 'Failed to load announcements. Please try again.';
+          this.isLoading = false;
+        },
+      });
+  }
+
+  private transformApiData(
+    apiData: ApiAnnouncementResponse[]
+  ): AnnouncementType[] {
+    return apiData.map((item) => ({
+      id: item._id,
+      title: item.title,
+      content: item.description,
+      date: item.createdAt,
+      author: this.getAuthorFromAudience(item.to_whom),
+      priority: this.capitalizePriority(item.priority),
+      targetAudience: this.formatTargetAudience(item.to_whom),
+      status: item.is_active ? 'Active' : 'Archived',
+      attachments: [],
+    }));
+  }
+
+  private capitalizePriority(priority: string): string {
+    return priority.charAt(0).toUpperCase() + priority.slice(1).toLowerCase();
+  }
+
+  private formatTargetAudience(toWhom: string): string {
+    const audienceMap: { [key: string]: string } = {
+      all: 'All',
+      teacher: 'Teachers',
+      parent: 'Parents',
+      student: 'Students',
+    };
+    return audienceMap[toWhom] || toWhom;
+  }
+
+  private getAuthorFromAudience(toWhom: string): string {
+    const authorMap: { [key: string]: string } = {
+      all: 'Administration',
+      teacher: 'HR Department',
+      parent: 'Academic Coordinator',
+      student: 'Principal',
+    };
+    return authorMap[toWhom] || 'Administration';
+  }
 
   // Computed properties for summary statistics
   get totalAnnouncementsCount(): number {
@@ -151,6 +241,7 @@ export class Announcements {
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+    if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
     if (diffDays <= 7) return `${diffDays} days ago`;
     if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
@@ -159,5 +250,15 @@ export class Announcements {
 
   setSelectedAnnouncement(announcement: AnnouncementType) {
     this.selectedAnnouncement = announcement;
+  }
+
+  // Method to refresh announcements
+  refreshAnnouncements(): void {
+    this.loadAnnouncements();
+  }
+
+  // Method to retry loading on error
+  retryLoading(): void {
+    this.loadAnnouncements();
   }
 }

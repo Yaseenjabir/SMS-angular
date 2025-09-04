@@ -20,7 +20,7 @@
     <div class="flex-1">
       <input
         hlmInput
-        placeholder="Search exams by name, subject, or class..."
+        placeholder="Search exams by name, description, or class..."
         [(ngModel)]="searchTerm"
         class="w-full"
       />
@@ -30,14 +30,14 @@
       class="w-full sm:w-48 h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
     >
       <option value="all">All Status</option>
-      <option value="Upcoming">Upcoming</option>
-      <option value="Ongoing">Ongoing</option>
-      <option value="Completed">Completed</option>
+      <option value="UPCOMING">Upcoming</option>
+      <option value="ONGOING">Ongoing</option>
+      <option value="COMPLETED">Completed</option>
     </select>
   </div>
 
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <div hlmCard>
       <div hlmCardHeader class="pb-2">
         <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
@@ -47,6 +47,18 @@
       <div hlmCardContent>
         <div class="text-2xl font-bold text-primary">
           {{ upcomingExamsCount }}
+        </div>
+      </div>
+    </div>
+    <div hlmCard>
+      <div hlmCardHeader class="pb-2">
+        <span hlmCardTitle class="text-sm font-medium text-muted-foreground">
+          Ongoing Exams
+        </span>
+      </div>
+      <div hlmCardContent>
+        <div class="text-2xl font-bold text-warning">
+          {{ ongoingExamsCount }}
         </div>
       </div>
     </div>
@@ -76,8 +88,15 @@
     </div>
   </div>
 
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-12">
+    <div class="text-4xl mb-4">⏳</div>
+    <h3 class="text-xl font-semibold mb-2">Loading exams...</h3>
+    <p class="text-muted-foreground">Please wait while we fetch your exams.</p>
+  </div>
+
   <!-- Exams List -->
-  <div class="space-y-4">
+  <div *ngIf="!loading" class="space-y-4">
     <div
       *ngFor="let exam of sortedExams"
       hlmCard
@@ -93,68 +112,79 @@
                 {{ exam.name }}
               </h3>
               <span hlmBadge [class]="getStatusColor(exam.status)">
-                {{ exam.status }}
+                {{ getDisplayStatus(exam.status) }}
               </span>
             </div>
 
-            <div
-              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"
-            >
-              <div class="flex items-center space-x-2">
-                <span class="text-muted-foreground">📚</span>
-                <div>
-                  <p class="font-medium">{{ exam.subject }}</p>
-                  <p class="text-muted-foreground">Subject</p>
-                </div>
-              </div>
+            <!-- Description -->
+            <p class="text-muted-foreground mb-4">{{ exam.description }}</p>
 
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm"
+            >
               <div class="flex items-center space-x-2">
                 <span class="text-muted-foreground">🏫</span>
                 <div>
-                  <p class="font-medium">{{ exam.class }}</p>
-                  <p class="text-muted-foreground">Class</p>
+                  <p class="font-medium">{{ getClassRange(exam) }}</p>
+                  <p class="text-muted-foreground">Classes</p>
                 </div>
               </div>
 
               <div class="flex items-center space-x-2">
                 <span class="text-muted-foreground">📅</span>
                 <div>
-                  <p class="font-medium">{{ formatDate(exam.date) }}</p>
-                  <p class="text-muted-foreground">
-                    {{ formatTime(exam.time) }}
-                  </p>
+                  <p class="font-medium">{{ formatDate(exam.start_date) }}</p>
+                  <p class="text-muted-foreground">Start Date</p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <span class="text-muted-foreground">📅</span>
+                <div>
+                  <p class="font-medium">{{ formatDate(exam.end_date) }}</p>
+                  <p class="text-muted-foreground">End Date</p>
                 </div>
               </div>
 
               <div class="flex items-center space-x-2">
                 <span class="text-muted-foreground">⏱️</span>
                 <div>
-                  <p class="font-medium">{{ exam.duration }}</p>
-                  <p class="text-muted-foreground">
-                    {{ exam.totalMarks }} marks
-                  </p>
+                  <p class="font-medium">{{ getDuration(exam) }}</p>
+                  <p class="text-muted-foreground">Duration</p>
                 </div>
               </div>
-            </div>
 
-            <div class="mt-3 pt-3 border-t">
-              <div class="flex items-center justify-between text-sm">
-                <div class="flex items-center space-x-4">
-                  <span class="text-muted-foreground">
-                    👩‍🏫 <strong>{{ exam.teacher }}</strong>
-                  </span>
-                  <span class="text-muted-foreground">
-                    📍 <strong>{{ exam.room }}</strong>
-                  </span>
+              <div
+                *ngIf="exam.date_sheet_image"
+                class="flex items-center space-x-2"
+              >
+                <span class="text-muted-foreground">📋</span>
+                <div>
+                  <a
+                    [href]="exam.date_sheet_image"
+                    target="_blank"
+                    class="font-medium text-primary hover:underline"
+                  >
+                    View Date Sheet
+                  </a>
+                  <p class="text-muted-foreground">Schedule</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="flex flex-col sm:flex-row gap-2 lg:flex-col">
-            <button hlmBtn variant="outline" size="sm">View Details</button>
             <button
-              *ngIf="exam.status === 'Upcoming'"
+              hlmBtn
+              variant="outline"
+              size="sm"
+              (click)="openImageDialog(exam)"
+              [disabled]="!exam.date_sheet_image"
+            >
+              View Details
+            </button>
+            <button
+              *ngIf="exam.status === 'UPCOMING'"
               hlmBtn
               size="sm"
               class="bg-primary hover:bg-primary-dark"
@@ -168,7 +198,7 @@
   </div>
 
   <!-- No results message -->
-  <div *ngIf="filteredExams.length === 0" class="text-center py-12">
+  <div *ngIf="!loading && filteredExams.length === 0" class="text-center py-12">
     <div class="text-6xl mb-4">📝</div>
     <h3 class="text-xl font-semibold mb-2">No exams found</h3>
     <p class="text-muted-foreground">
@@ -176,3 +206,52 @@
     </p>
   </div>
 </div>
+
+<!-- Image Dialog -->
+<hlm-dialog *ngIf="showImageDialog">
+  <button brnDialogTrigger class="hidden" id="imageDialogTrigger"></button>
+  <hlm-dialog-content
+    class="w-full max-w-4xl max-h-[90vh] overflow-hidden"
+    *brnDialogContent="let ctx"
+  >
+    <hlm-dialog-header>
+      <h2 class="text-lg font-semibold">
+        {{ selectedExam?.name }} - Date Sheet
+      </h2>
+    </hlm-dialog-header>
+
+    <div class="flex-1 overflow-auto p-4">
+      <div *ngIf="selectedExam?.date_sheet_image" class="flex justify-center">
+        <img
+          [src]="selectedExam?.date_sheet_image"
+          [alt]="(selectedExam?.name || 'Exam') + ' date sheet'"
+          class="max-w-full h-auto rounded-lg shadow-lg"
+          style="max-height: 70vh; object-fit: contain"
+        />
+      </div>
+      <div *ngIf="!selectedExam?.date_sheet_image" class="text-center py-8">
+        <div class="text-4xl mb-4">📋</div>
+        <p class="text-muted-foreground">
+          No date sheet image available for this exam.
+        </p>
+      </div>
+    </div>
+
+    <hlm-dialog-footer>
+      <button hlmBtn variant="outline" (click)="closeImageDialog()">
+        Close
+      </button>
+      <a
+        *ngIf="selectedExam?.date_sheet_image"
+        [href]="selectedExam?.date_sheet_image"
+        target="_blank"
+        hlmBtn
+        class="bg-primary hover:bg-primary-dark"
+      >
+        Open in New Tab
+      </a>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>
+
+<hlm-toaster />
