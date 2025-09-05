@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import studentsData from '../../data/students.json';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgClass } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/helm/button';
@@ -8,13 +7,16 @@ import { StudentForm } from './student-form/student-form';
 import {
   HlmDialogComponent,
   HlmDialogContentComponent,
-  HlmDialogHeaderComponent,
-  HlmDialogFooterComponent,
 } from '@spartan-ng/helm/dialog';
 import {
   BrnDialogContentDirective,
   BrnDialogTriggerDirective,
 } from '@spartan-ng/brain/dialog';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.development';
+import { GET_ALL_STUDENTS } from '../../utils/apiPaths';
+import { toast } from 'ngx-sonner';
+
 @Component({
   selector: 'app-students',
   imports: [
@@ -23,7 +25,6 @@ import {
     BrnDialogContentDirective,
     BrnDialogTriggerDirective,
     FormsModule,
-    NgClass,
     CommonModule,
     HlmButtonDirective,
     StudentForm,
@@ -31,41 +32,50 @@ import {
   templateUrl: './students.html',
   styleUrl: './students.css',
 })
-export class Students {
+export class Students implements OnInit {
   searchTerm = '';
   classFilter = 'all';
-  selectedStudent: any = null;
-  isAddFormOpen = false;
-  isEditFormOpen = false;
-  editingStudent: any = null;
+  studentsData: any[] = []; // will now come from API
+  isLoading = true;
 
-  open() {
-    this.appService.open();
+  constructor(
+    private readonly appService: AppService,
+    private readonly http: HttpClient
+  ) {}
+
+  ngOnInit(): void {
+    this.fetchStudents();
   }
 
-  close() {
-    this.appService.close();
+  fetchStudents() {
+    this.isLoading = true;
+    this.http.get<any[]>(`${environment.apiUrl}${GET_ALL_STUDENTS}`).subscribe({
+      next: (res) => {
+        this.studentsData = res;
+        this.isLoading = false;
+      },
+      error: (ex) => {
+        toast.error(ex.error?.message || 'Failed to fetch students');
+        this.isLoading = false;
+      },
+    });
   }
 
-  constructor(private readonly appService: AppService) {}
-
-  // Data
-  studentsData = studentsData;
-
-  // Getter for filtered students
+  // Filtered students based on search + class
   get filteredStudents() {
     return this.studentsData.filter((student) => {
       const matchesSearch =
         student.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        student.rollNo.includes(this.searchTerm);
+        student.rollNo.toString().includes(this.searchTerm);
       const matchesClass =
-        this.classFilter === 'all' || student.class === this.classFilter;
+        this.classFilter === 'all' ||
+        student.grade.toString() === this.classFilter;
       return matchesSearch && matchesClass;
     });
   }
 
-  // Getter for unique classes
+  // Unique grades (instead of classes)
   get uniqueClasses() {
-    return [...new Set(this.studentsData.map((s: any) => s.class))];
+    return [...new Set(this.studentsData.map((s: any) => s.grade.toString()))];
   }
 }

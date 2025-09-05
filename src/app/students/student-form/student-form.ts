@@ -88,6 +88,8 @@ export class StudentForm implements OnInit {
       const selectedClass = this.gradeSections.find(
         (item) => item._id === selectedClassId
       );
+
+      console.log(selectedClass);
       if (selectedClass) {
         return `Grade ${selectedClass.grade}, Section ${selectedClass.section}`;
       }

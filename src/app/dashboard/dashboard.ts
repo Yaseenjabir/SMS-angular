@@ -3,11 +3,11 @@ import studentsData from '../../data/students.json';
 import teachersData from '../../data/teachers.json';
 import feesData from '../../data/fees.json';
 import announcementsData from '../../data/announcements.json';
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgClass, CommonModule],
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

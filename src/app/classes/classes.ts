@@ -36,7 +36,7 @@ interface ClassType {
   grade: number;
   section: string;
   teacher: string;
-  totalStudents: number;
+  studentCount: number;
   subjects: string[];
   room: string;
   weeklySchedule: { [key: string]: string[] };
@@ -81,6 +81,7 @@ export class Classes implements OnInit {
     // API call on page load
     this.http.get(`${environment.apiUrl}${GET_ALL_CLASSES}`).subscribe({
       next: (response: any) => {
+        console.log(response);
         this.classesData = response.data;
       },
       error: (err) => {

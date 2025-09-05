@@ -8,6 +8,7 @@ export const PROFILE = '/auth/profile';
 
 // Student endpoints
 export const CREATE_STUDENT = '/student/create';
+export const GET_ALL_STUDENTS = '/student/getAllStudents';
 
 // Teacher endpoints
 export const CREATE_TEACHER = '/teacher/create';
