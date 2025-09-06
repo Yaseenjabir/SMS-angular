@@ -13,7 +13,7 @@ function getAllFiles(dirPath, files = []) {
   return files;
 }
 
-const routeFolder = "./classes/classes-wizard";
+const routeFolder = "./students/student-form";
 const outputFile = "output.txt";
 
 // Clear the file before writing (optional)

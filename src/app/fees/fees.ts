@@ -1,14 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import feesData from '../../data/fees.json';
 import {
   HlmCardDirective,
   HlmCardHeaderDirective,
   HlmCardTitleDirective,
   HlmCardContentDirective,
 } from '@spartan-ng/helm/card';
-import { HlmBadgeDirective } from '@spartan-ng/helm/badge';
 import { HlmButtonDirective } from '@spartan-ng/helm/button';
 import { HlmInputDirective } from '@spartan-ng/helm/input';
 import {
@@ -17,34 +15,59 @@ import {
   HlmThDirective,
   HlmTdDirective,
 } from '@spartan-ng/helm/table';
+import { FeeStructure } from './fee-structure/fee-structure';
+import {
+  HlmDialogComponent,
+  HlmDialogContentComponent,
+} from '@spartan-ng/helm/dialog';
+import {
+  BrnDialogContentDirective,
+  BrnDialogTriggerDirective,
+} from '@spartan-ng/brain/dialog';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.development';
+import { GET_ALL_FEE_PLANS } from '../../utils/apiPaths';
+import { toast } from 'ngx-sonner';
+// Types for new fee plan object
+interface FeeComponent {
+  name: string;
+  amount: number;
+  frequency: 'monthly' | 'yearly';
+}
 
-interface FeeType {
-  id: number;
-  studentName: string;
-  studentId: number;
-  class: string;
-  rollNo: string;
-  totalAmount: number;
-  paidAmount: number;
-  dueAmount: number;
-  paymentStatus: string;
-  dueDate: string;
-  paymentDate: string | null;
-  paymentMethod: string | null;
-  receipt: string | null;
+interface Discount {
+  description: string;
+  amount: number;
+}
+
+export interface FeePlan {
+  title: string;
+  components: FeeComponent[];
+  admissionFee: number;
+  securityDeposit: number;
+  discounts: Discount[];
+  class: {
+    grade: number;
+    section: string;
+  };
+  isActive: boolean;
 }
 
 @Component({
   selector: 'app-fees',
   standalone: true,
   imports: [
+    BrnDialogContentDirective,
+    BrnDialogTriggerDirective,
+    HlmDialogComponent,
+    HlmDialogContentComponent,
     CommonModule,
     FormsModule,
     HlmCardDirective,
     HlmCardHeaderDirective,
     HlmCardTitleDirective,
     HlmCardContentDirective,
-    HlmBadgeDirective,
+    FeeStructure,
     HlmButtonDirective,
     HlmInputDirective,
     HlmTableDirective,
@@ -55,87 +78,89 @@ interface FeeType {
   templateUrl: './fees.html',
   styleUrl: './fees.css',
 })
-export class Fees {
+export class Fees implements OnInit {
+  constructor(private readonly http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.http
+      .get<FeePlan[]>(`${environment.apiUrl}${GET_ALL_FEE_PLANS}`)
+      .subscribe({
+        next: (res) => {
+          this.feePlans = res;
+        },
+        error: (ex) => {
+          toast.error(ex.message);
+          console.log(ex);
+        },
+      });
+  }
+
   searchTerm = '';
   statusFilter = 'all';
-  feesData: FeeType[] = feesData;
 
-  // Computed properties for summary statistics
-  get totalAmount(): number {
-    return this.feesData.reduce((sum, fee) => sum + fee.totalAmount, 0);
+  // Dummy API data (replace with service call later)
+  // feePlans: FeePlan[] = [
+  //   {
+  //     title: 'Grade 7 Fee Plan - 2024',
+  //     components: [
+  //       { name: 'Tuition Fee', amount: 5000, frequency: 'monthly' },
+  //       { name: 'Transport Fee', amount: 2000, frequency: 'monthly' },
+  //       { name: 'Lab Fee', amount: 3000, frequency: 'yearly' },
+  //     ],
+  //     admissionFee: 10000,
+  //     securityDeposit: 5000,
+  //     discounts: [
+  //       { description: 'Sibling Discount', amount: 2000 },
+  //       { description: 'Scholarship', amount: 5000 },
+  //     ],
+  //     class: {
+  //       grade: 8,
+  //       section: 'B',
+  //     },
+  //     isActive: true,
+  //   },
+  //   {
+  //     title: 'Grade 8 Fee Plan - 2024',
+  //     components: [
+  //       { name: 'Tuition Fee', amount: 6000, frequency: 'monthly' },
+  //       { name: 'Transport Fee', amount: 2500, frequency: 'monthly' },
+  //     ],
+  //     admissionFee: 12000,
+  //     securityDeposit: 6000,
+  //     discounts: [{ description: 'Merit Scholarship', amount: 4000 }],
+  //     class: {
+  //       grade: 7,
+  //       section: 'R',
+  //     },
+  //     isActive: false,
+  //   },
+  // ];
+  feePlans: FeePlan[] = [];
+
+  // Computed values
+  get totalAdmissionFees(): number {
+    return this.feePlans.reduce((sum, plan) => sum + plan.admissionFee, 0);
   }
 
-  get paidAmount(): number {
-    return this.feesData.reduce((sum, fee) => sum + fee.paidAmount, 0);
+  get totalSecurityDeposits(): number {
+    return this.feePlans.reduce((sum, plan) => sum + plan.securityDeposit, 0);
   }
 
-  get dueAmount(): number {
-    return this.feesData.reduce((sum, fee) => sum + fee.dueAmount, 0);
+  get totalDiscounts(): number {
+    return this.feePlans.reduce(
+      (sum, plan) =>
+        sum + plan.discounts.reduce((dsum, d) => dsum + d.amount, 0),
+      0
+    );
   }
 
-  get paidCount(): number {
-    return this.feesData.filter((fee) => fee.paymentStatus === 'Paid').length;
+  get filteredPlans(): FeePlan[] {
+    return this.feePlans.filter((plan) =>
+      plan.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
   }
 
-  get dueCount(): number {
-    return this.feesData.filter((fee) => fee.paymentStatus === 'Due').length;
-  }
-
-  get partialCount(): number {
-    return this.feesData.filter((fee) => fee.paymentStatus === 'Partial')
-      .length;
-  }
-
-  get collectionRate(): number {
-    return this.totalAmount > 0
-      ? (this.paidAmount / this.totalAmount) * 100
-      : 0;
-  }
-
-  // Filter fees based on search and status - reactive getter
-  get filteredFees(): FeeType[] {
-    return this.feesData.filter((fee) => {
-      const matchesSearch =
-        fee.studentName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        fee.rollNo.includes(this.searchTerm) ||
-        fee.class.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesStatus =
-        this.statusFilter === 'all' || fee.paymentStatus === this.statusFilter;
-      return matchesSearch && matchesStatus;
-    });
-  }
-
-  // Get recent payments for payment history
-  get recentPayments(): FeeType[] {
-    return this.feesData
-      .filter((fee) => fee.paymentDate)
-      .sort(
-        (a, b) =>
-          new Date(b.paymentDate!).getTime() -
-          new Date(a.paymentDate!).getTime()
-      )
-      .slice(0, 5);
-  }
-
-  getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Paid':
-        return 'bg-success text-success-foreground';
-      case 'Due':
-        return 'bg-destructive text-destructive-foreground';
-      case 'Partial':
-        return 'bg-warning text-warning-foreground';
-      default:
-        return 'bg-muted text-muted-foreground';
-    }
-  };
-
-  formatCurrency = (amount: number) => {
+  formatCurrency(amount: number): string {
     return `$${amount.toLocaleString()}`;
-  };
-
-  formatDate = (dateString: string | null) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString();
-  };
+  }
 }

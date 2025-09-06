@@ -29,6 +29,7 @@ import { ClassesWizard } from './classes-wizard/classes-wizard';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { GET_ALL_CLASSES } from '../../utils/apiPaths';
+import { FeePlan } from '../fees/fees';
 
 interface ClassType {
   _id: string;
@@ -40,6 +41,7 @@ interface ClassType {
   subjects: string[];
   room: string;
   weeklySchedule: { [key: string]: string[] };
+  feeStructure: FeePlan;
 }
 
 @Component({
@@ -69,7 +71,7 @@ interface ClassType {
   styleUrl: './classes.css',
 })
 export class Classes implements OnInit {
-  classesData: ClassType[] | null = null;
+  classesData: ClassType[] = [];
   selectedClass: ClassType | null = null;
   daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
@@ -83,6 +85,7 @@ export class Classes implements OnInit {
       next: (response: any) => {
         console.log(response);
         this.classesData = response.data;
+        console.log('Data issssss : ', this.classesData[0].feeStructure.title);
       },
       error: (err) => {
         console.error('Error fetching classes:', err);

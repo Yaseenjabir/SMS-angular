@@ -21,3 +21,7 @@ export const GET_ALL_EXAMS = '/exam/getAllExams';
 // Anouncement endpoints
 export const CREATE_ANNOUNCEMENT = '/announcement/create';
 export const GET_ALL_ANNOUNCEMENT = '/announcement/getAllAnnouncement';
+
+// Fee endpoints
+export const CREATE_FEE_PLAN = '/fee/create';
+export const GET_ALL_FEE_PLANS = '/fee/getAll';
